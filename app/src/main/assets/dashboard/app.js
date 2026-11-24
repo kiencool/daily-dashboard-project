@@ -138,6 +138,8 @@
       monthlyBudget: 6000000,
       coins: ['BTC', 'ETH'],
       geminiKey: '',
+      firebaseUrl: '',
+      firebaseSyncId: '',
       idleClock: true,
       autoDim: true,
       wakeLockPreferred: true
@@ -155,7 +157,8 @@
     dayNotes: {},
     expenses: [],
     jpFilter: { mode: 'topic', value: 'all' },
-    customJpWords: []
+    customJpWords: [],
+    updatedAt: 0
   };
 
   let state = loadState();
@@ -202,15 +205,91 @@
         dayNotes: parsed.dayNotes && typeof parsed.dayNotes === 'object' ? parsed.dayNotes : {},
         expenses: Array.isArray(parsed.expenses) ? parsed.expenses : [],
         jpFilter: parsed.jpFilter || { mode: 'topic', value: 'all' },
-        customJpWords: Array.isArray(parsed.customJpWords) ? parsed.customJpWords : []
+        customJpWords: Array.isArray(parsed.customJpWords) ? parsed.customJpWords : [],
+        updatedAt: Number(parsed.updatedAt) || 0
       };
     } catch {
       return structuredClone(DEFAULT_STATE);
     }
   }
 
-  function saveState() {
+  let fbPushTimer = null;
+
+  function getFirebaseEndpoint() {
+    const base = (state.settings.firebaseUrl || '').trim().replace(/\/+$/, '');
+    const id = (state.settings.firebaseSyncId || '').trim().replace(/[^a-zA-Z0-9_-]/g, '');
+    if (!base || !id) return null;
+    return `${base}/deskdash/${id}.json`;
+  }
+
+  async function pushToFirebase() {
+    const url = getFirebaseEndpoint();
+    if (!url) return;
     try {
+      const payload = {
+        monthlyBudget: state.settings.monthlyBudget,
+        workoutHistory: state.workoutHistory,
+        weightLogs: state.weightLogs,
+        exerciseLogs: state.exerciseLogs,
+        todos: state.todos,
+        quickNote: state.quickNote,
+        dayNotes: state.dayNotes,
+        expenses: state.expenses,
+        updatedAt: state.updatedAt || Date.now()
+      };
+      await fetch(url, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (e) {
+      console.error('Firebase push failed:', e);
+    }
+  }
+
+  async function pullFromFirebase() {
+    const url = getFirebaseEndpoint();
+    if (!url) return;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) return;
+      const remote = await res.json();
+      if (!remote || typeof remote !== 'object') {
+        if ((state.updatedAt || 0) > 0) pushToFirebase();
+        return;
+      }
+      const remoteTime = Number(remote.updatedAt) || 0;
+      const localTime = Number(state.updatedAt) || 0;
+      if (remoteTime > localTime) {
+        if (typeof remote.monthlyBudget === 'number') state.settings.monthlyBudget = remote.monthlyBudget;
+        if (Array.isArray(remote.workoutHistory)) state.workoutHistory = remote.workoutHistory;
+        if (Array.isArray(remote.weightLogs)) state.weightLogs = remote.weightLogs;
+        if (Array.isArray(remote.exerciseLogs)) state.exerciseLogs = remote.exerciseLogs;
+        if (Array.isArray(remote.todos)) state.todos = remote.todos;
+        if (typeof remote.quickNote === 'string') state.quickNote = remote.quickNote;
+        if (remote.dayNotes && typeof remote.dayNotes === 'object') state.dayNotes = remote.dayNotes;
+        if (Array.isArray(remote.expenses)) state.expenses = remote.expenses;
+        state.updatedAt = remoteTime;
+        saveState(true);
+        renderAll();
+        if (activeGymSub === 'charts') renderCharts();
+      } else if (localTime > remoteTime) {
+        pushToFirebase();
+      }
+    } catch (e) {
+      console.error('Firebase pull failed:', e);
+    }
+  }
+
+  function saveState(skipSync = false) {
+    try {
+      if (!skipSync) {
+        state.updatedAt = Date.now();
+        if (fbPushTimer) clearTimeout(fbPushTimer);
+        if (getFirebaseEndpoint()) {
+          fbPushTimer = setTimeout(pushToFirebase, 700);
+        }
+      }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch (e) {
       console.error('Save failed:', e);
@@ -1978,6 +2057,8 @@ Dữ liệu hiện tại của người dùng:
       $('set-vn30').value = (state.settings.vn30 || DEFAULT_VN30).join(', ');
       $('set-coins').value = state.settings.coins.join(', ');
       $('set-gemini-key').value = state.settings.geminiKey || '';
+      if ($('set-fb-url')) $('set-fb-url').value = state.settings.firebaseUrl || '';
+      if ($('set-fb-id')) $('set-fb-id').value = state.settings.firebaseSyncId || '';
       $('set-idle-clock').checked = state.settings.idleClock;
       $('set-auto-dim').checked = state.settings.autoDim;
       $('settings-modal').classList.remove('hidden');
@@ -1997,6 +2078,8 @@ Dữ liệu hiện tại của người dùng:
       )];
       state.settings.coins = nextCoins.length ? nextCoins : ['BTC', 'ETH'];
       state.settings.geminiKey = $('set-gemini-key').value.trim();
+      if ($('set-fb-url')) state.settings.firebaseUrl = $('set-fb-url').value.trim();
+      if ($('set-fb-id')) state.settings.firebaseSyncId = $('set-fb-id').value.trim();
       state.settings.idleClock = $('set-idle-clock').checked;
       state.settings.autoDim = $('set-auto-dim').checked;
       saveState();
@@ -2006,6 +2089,7 @@ Dữ liệu hiện tại của người dùng:
       fetchWeather();
       fetchVN30();
       fetchCryptoAndFx();
+      pullFromFirebase();
     });
 
     $('btn-export').addEventListener('click', () => {
@@ -2072,12 +2156,17 @@ Dữ liệu hiện tại của người dùng:
     fetchVN30();
     fetchCryptoAndFx();
     fetchGoldPhuHao();
+    pullFromFirebase();
     resetIdleTimer();
 
     if (state.settings.wakeLockPreferred) requestWakeLock();
 
     setInterval(updateClock, 1000);
     setInterval(driftIdleClock, 60 * 1000);
+    setInterval(() => {
+      if (isIdleClockActive) return;
+      pullFromFirebase();
+    }, 15 * 1000);
     setInterval(() => {
       jpIndex = (jpIndex + 1) % JP_WORDS.length;
       renderJapaneseWord();
