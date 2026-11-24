@@ -72,13 +72,13 @@
                   <span class="clock-pretty-hm" id="clock-time">00:00</span>
                   <div class="clock-pretty-date" id="clock-date">Thứ ..., --/--</div>
                 </div>
-                <button type="button" class="desk-pet" id="desk-pet" title="Chạm vào Mochi để tương tác!">
-                  <div class="pet-bubble hidden" id="pet-bubble">Chào bạn!</div>
+                <button type="button" class="desk-pet" id="desk-pet" title="Chạm vào Bé Inu để tương tác!">
+                  <div class="pet-bubble hidden" id="pet-bubble">Gâu! Chào bạn!</div>
                   <svg class="pet-svg" id="pet-svg" viewBox="0 0 96 96">
                     <defs>
-                      <linearGradient id="mochiBody" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stop-color="#ffffff"/>
-                        <stop offset="100%" stop-color="#ede9fe"/>
+                      <linearGradient id="inuFur" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#fbbf24"/>
+                        <stop offset="100%" stop-color="#ea580c"/>
                       </linearGradient>
                       <linearGradient id="mochiScarf" x1="0" y1="0" x2="1" y2="0">
                         <stop offset="0%" stop-color="#a855f7"/>
@@ -86,42 +86,48 @@
                       </linearGradient>
                     </defs>
                     <!-- Soft shadow -->
-                    <ellipse cx="48" cy="86" rx="22" ry="4.5" fill="rgba(124,58,237,0.18)"/>
-                    <!-- Swaying Tail -->
-                    <path class="pet-tail" d="M68 68 Q84 64 80 48 Q78 42 73 45" fill="none" stroke="#ddd6fe" stroke-width="7" stroke-linecap="round"/>
-                    <!-- Ears outer -->
-                    <path d="M23 36 L20 13 Q20 10 24 12 L39 24 Z" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.2" stroke-linejoin="round"/>
-                    <path d="M73 36 L76 13 Q76 10 72 12 L57 24 Z" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.2" stroke-linejoin="round"/>
-                    <!-- Ears inner pink -->
-                    <path d="M26 31 L24 18 L34 25 Z" fill="#fbcfe8"/>
-                    <path d="M70 31 L72 18 L62 25 Z" fill="#fbcfe8"/>
+                    <ellipse cx="48" cy="86" rx="23" ry="4.5" fill="rgba(234,88,12,0.18)"/>
+                    <!-- Curled Shiba Tail -->
+                    <path class="pet-tail" d="M68 68 C86 64 87 42 74 42 C67 42 66 50 72 52" fill="none" stroke="#f59e0b" stroke-width="8.5" stroke-linecap="round"/>
+                    <path class="pet-tail" d="M74 42 C69 42 68 48 72 51" fill="none" stroke="#fffbeb" stroke-width="4" stroke-linecap="round"/>
+                    <!-- Shiba Ears -->
+                    <g class="pet-ears">
+                      <path d="M23 36 L19 13 Q19 9 24 12 L39 24 Z" fill="url(#inuFur)" stroke="#9a3412" stroke-width="2" stroke-linejoin="round"/>
+                      <path d="M73 36 L77 13 Q77 9 72 12 L57 24 Z" fill="url(#inuFur)" stroke="#9a3412" stroke-width="2" stroke-linejoin="round"/>
+                      <path d="M25 31 L23 18 L34 25 Z" fill="#fed7aa"/>
+                      <path d="M71 31 L73 18 L62 25 Z" fill="#fed7aa"/>
+                    </g>
                     <!-- Chibi Body/Head -->
-                    <path d="M22 46 C22 25 34 20 48 20 C62 20 74 25 74 46 C74 68 66 82 48 82 C30 82 22 68 22 46 Z" fill="url(#mochiBody)" stroke="#7c3aed" stroke-width="2.2"/>
-                    <!-- Forehead stripe -->
-                    <path d="M44 21 L44 27 M48 20 L48 29 M52 21 L52 27" stroke="#c4b5fd" stroke-width="2.4" stroke-linecap="round"/>
+                    <path d="M21 47 C21 25 34 20 48 20 C62 20 75 25 75 47 C75 68 66 82 48 82 C30 82 21 68 21 47 Z" fill="url(#inuFur)" stroke="#9a3412" stroke-width="2"/>
+                    <!-- Urajiro (Cream Cheeks, Muzzle & Belly) -->
+                    <path d="M23 49 C23 41 33 43 40 46 C44 48 52 48 56 46 C63 43 73 41 73 49 C73 67 64 81 48 81 C32 81 23 67 23 49 Z" fill="#fffbeb"/>
+                    <!-- Shiba White Eyebrow Dots -->
+                    <ellipse cx="36" cy="34" rx="3.4" ry="2.2" fill="#fffbeb"/>
+                    <ellipse cx="60" cy="34" rx="3.4" ry="2.2" fill="#fffbeb"/>
                     <!-- Sparkling Anime Eyes -->
                     <g class="pet-eye">
-                      <ellipse cx="36" cy="45" rx="4.5" ry="5.5" fill="#1e1b4b"/>
-                      <circle cx="34.5" cy="43" r="1.8" fill="#ffffff"/>
-                      <circle cx="37.5" cy="47" r="0.9" fill="#a78bfa"/>
+                      <ellipse cx="36" cy="43" rx="4.3" ry="5.1" fill="#1e1b4b"/>
+                      <circle cx="34.5" cy="41.2" r="1.7" fill="#ffffff"/>
+                      <circle cx="37.4" cy="44.8" r="0.9" fill="#fde68a"/>
                     </g>
                     <g class="pet-eye">
-                      <ellipse cx="60" cy="45" rx="4.5" ry="5.5" fill="#1e1b4b"/>
-                      <circle cx="58.5" cy="43" r="1.8" fill="#ffffff"/>
-                      <circle cx="61.5" cy="47" r="0.9" fill="#a78bfa"/>
+                      <ellipse cx="60" cy="43" rx="4.3" ry="5.1" fill="#1e1b4b"/>
+                      <circle cx="58.5" cy="41.2" r="1.7" fill="#ffffff"/>
+                      <circle cx="61.4" cy="44.8" r="0.9" fill="#fde68a"/>
                     </g>
                     <!-- Rosy Cheeks -->
-                    <ellipse cx="28" cy="51" rx="4.5" ry="2.5" fill="#fda4af" opacity="0.75"/>
-                    <ellipse cx="68" cy="51" rx="4.5" ry="2.5" fill="#fda4af" opacity="0.75"/>
-                    <!-- Cute Nose & :3 Mouth -->
-                    <polygon points="46,49 50,49 48,51.5" fill="#fb7185"/>
-                    <path d="M42 53 Q45 56 48 53 Q51 56 54 53" fill="none" stroke="#4c1d95" stroke-width="1.9" stroke-linecap="round"/>
+                    <ellipse cx="27" cy="51" rx="4.5" ry="2.5" fill="#fda4af" opacity="0.8"/>
+                    <ellipse cx="69" cy="51" rx="4.5" ry="2.5" fill="#fda4af" opacity="0.8"/>
+                    <!-- Cute Black Dog Nose & Happy Mouth + Tongue -->
+                    <ellipse cx="48" cy="48.5" rx="3.3" ry="2.2" fill="#1e1b4b"/>
+                    <path d="M41.5 52.5 Q45 56 48 52 Q51 56 54.5 52.5" fill="none" stroke="#7c2d12" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M45.5 54 Q48 60.5 50.5 54 Z" fill="#fb7185"/>
                     <!-- Cute Scarf / Collar -->
-                    <path d="M27 61 Q48 68 69 61 Q67 68 48 70 Q29 68 27 61 Z" fill="url(#mochiScarf)"/>
-                    <circle cx="48" cy="69" r="3.5" fill="#fde047" stroke="#b45309" stroke-width="1.2"/>
+                    <path d="M27 62 Q48 69 69 62 Q67 69 48 71 Q29 69 27 62 Z" fill="url(#mochiScarf)"/>
+                    <circle cx="48" cy="70" r="3.6" fill="#fde047" stroke="#b45309" stroke-width="1.2"/>
                     <!-- Cute Paws -->
-                    <ellipse cx="35" cy="76" rx="5.5" ry="4" fill="#ffffff" stroke="#7c3aed" stroke-width="1.8"/>
-                    <ellipse cx="61" cy="76" rx="5.5" ry="4" fill="#ffffff" stroke="#7c3aed" stroke-width="1.8"/>
+                    <ellipse cx="35" cy="77" rx="5.5" ry="4" fill="#fffbeb" stroke="#9a3412" stroke-width="1.8"/>
+                    <ellipse cx="61" cy="77" rx="5.5" ry="4" fill="#fffbeb" stroke="#9a3412" stroke-width="1.8"/>
                   </svg>
                 </button>
               </div>
@@ -436,21 +442,24 @@
     </div>
   </div>
 
-  <!-- Mochi Pet Interaction Pop-up -->
+  <!-- Shiba Inu Pet Interaction Pop-up -->
   <div class="sheet-backdrop hidden" id="pet-modal" style="align-items:center;padding:14px;">
-    <div class="popup-card" style="max-width:360px;">
+    <div class="popup-card" style="max-width:370px;">
       <div class="sheet-head">
-        <h3>🐾 Bé mèo Mochi <small id="pet-mood-badge" style="color:var(--accent);margin-left:6px;font-weight:700;">Vui vẻ ✨</small></h3>
+        <h3>🐕 Bé Shiba Inu <small id="pet-mood-badge" style="color:var(--accent);margin-left:6px;font-weight:700;">Tím Hồng</small></h3>
         <button class="corner-btn" id="btn-close-pet">✕</button>
       </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:4px 0;">
-        <div id="pet-modal-stage" title="Chạm vào Mochi!" style="transform:scale(1.35);margin:8px 0;"></div>
-        <div id="pet-modal-msg" style="font-size:0.84rem;font-weight:700;color:var(--text);text-align:center;min-height:36px;line-height:1.35;padding:0 6px;">Chạm vào Mochi hoặc chọn trò bên dưới nhé!</div>
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;padding:4px 0;">
+        <div id="pet-particles"></div>
+        <div id="pet-modal-stage" title="Chạm vào Bé Inu!" style="transform:scale(1.38);margin:10px 0;"></div>
+        <div id="pet-modal-msg" style="font-size:0.84rem;font-weight:700;color:var(--text);text-align:center;min-height:36px;line-height:1.35;padding:0 6px;">Gâu! Chạm vào Inu hoặc chọn trò bên dưới nhé!</div>
       </div>
       <div class="pet-actions">
         <button type="button" class="pet-act-btn" id="btn-pet-dance">💃 Nhảy múa</button>
+        <button type="button" class="pet-act-btn" id="btn-pet-spin">🌀 Lộn nhào</button>
         <button type="button" class="pet-act-btn" id="btn-pet-fortune">🔮 Rút quẻ</button>
         <button type="button" class="pet-act-btn" id="btn-pet-quiz">🎲 Đố N4</button>
+        <button type="button" class="pet-act-btn" id="btn-pet-sleep">💤 Ngủ gật</button>
         <button type="button" class="pet-act-btn" id="btn-pet-style">🎨 Đổi khăn</button>
       </div>
     </div>

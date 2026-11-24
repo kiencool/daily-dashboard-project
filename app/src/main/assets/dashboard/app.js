@@ -1470,17 +1470,35 @@ Dữ liệu hiện tại của người dùng:
       const gain = ctx.createGain();
       osc.type = 'triangle';
       const now = ctx.currentTime;
-      osc.frequency.setValueAtTime(520, now);
-      osc.frequency.exponentialRampToValueAtTime(760, now + 0.11);
-      osc.frequency.exponentialRampToValueAtTime(420, now + 0.32);
-      gain.gain.setValueAtTime(0.01, now);
-      gain.gain.linearRampToValueAtTime(0.14, now + 0.08);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.34);
+      // Double cheerful Shiba bark ("Gâu gâu!")
+      [0, 0.16].forEach((offset) => {
+        osc.frequency.setValueAtTime(340, now + offset);
+        osc.frequency.exponentialRampToValueAtTime(520, now + offset + 0.04);
+        osc.frequency.exponentialRampToValueAtTime(240, now + offset + 0.11);
+        gain.gain.setValueAtTime(0.01, now + offset);
+        gain.gain.linearRampToValueAtTime(0.16, now + offset + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.12);
+      });
       osc.connect(gain);
       gain.connect(ctx.destination);
       osc.start(now);
-      osc.stop(now + 0.35);
+      osc.stop(now + 0.34);
     } catch { /* ignore */ }
+  }
+
+  function spawnPetParticles(emoji = '✨', count = 5) {
+    const box = $('pet-particles');
+    if (!box) return;
+    for (let i = 0; i < count; i += 1) {
+      const el = document.createElement('span');
+      el.className = 'pet-particle';
+      el.textContent = emoji;
+      el.style.left = `${22 + Math.random() * 56}%`;
+      el.style.top = `${34 + Math.random() * 28}%`;
+      el.style.animationDelay = `${i * 0.08}s`;
+      box.appendChild(el);
+      setTimeout(() => el.remove(), 1300);
+    }
   }
 
   function applyPetScarf() {
@@ -1508,10 +1526,12 @@ Dữ liệu hiện tại của người dùng:
   function triggerStageAnim(cls, ms = 450) {
     const stage = $('pet-modal-stage');
     if (!stage) return;
-    stage.classList.remove('dancing', 'poked');
+    stage.classList.remove('dancing', 'poked', 'spinning', 'sleeping');
     void stage.offsetWidth;
     stage.classList.add(cls);
-    setTimeout(() => stage.classList.remove(cls), ms);
+    if (cls !== 'sleeping') {
+      setTimeout(() => stage.classList.remove(cls), ms);
+    }
   }
 
   function doPetAction(type) {
@@ -1520,33 +1540,47 @@ Dữ liệu hiện tại của người dùng:
     if (type === 'poke') {
       playMeow();
       triggerStageAnim('poked', 380);
+      spawnPetParticles('🐾', 4);
       const tips = [
-        `Meow~ Hôm nay đã uống ${state.waterLog?.count || 0}/8 ly nước rồi!`,
-        `Còn ${state.todos.filter((t) => !t.done).length} việc đang chờ bạn đó!`,
-        'Meow! Vuốt nhẹ thôi nha, nhột quá đi~ 🐾',
-        'Đừng quên tập vài động tác giãn cơ cho đỡ mỏi lưng nhé!'
+        `Gâu gâu! Hôm nay đã uống ${state.waterLog?.count || 0}/8 ly nước rồi!`,
+        `Gâu! Còn ${state.todos.filter((t) => !t.done).length} việc đang chờ bạn đó!`,
+        'Gâu~! Gãi cằm thích quá đi, quẫy đuôi tít mù! 🐾',
+        'Nhớ vươn vai cho đỡ mỏi lưng nhé chủ nhân!'
       ];
       msg = tips[Math.floor(Math.random() * tips.length)];
     } else if (type === 'dance') {
       playChime();
-      triggerStageAnim('dancing', 1800);
-      msg = 'Meow meow~ 🎶 Lắc lư thư giãn theo nhịp nào!';
+      triggerStageAnim('dancing', 2100);
+      spawnPetParticles('🎵', 6);
+      msg = 'Gâu gâu~ 🎶 Shiba nhảy điệu lắc hông siêu quậy!';
+    } else if (type === 'spin') {
+      playMeow();
+      triggerStageAnim('spinning', 680);
+      spawnPetParticles('✨', 6);
+      msg = 'Xoay 360 độ nè! Chóng mặt nhưng vui quá! 🌀';
     } else if (type === 'fortune') {
       playMeow();
       triggerStageAnim('poked', 380);
+      spawnPetParticles('🌟', 5);
       msg = `🎋 ${PET_FORTUNES[Math.floor(Math.random() * PET_FORTUNES.length)]}`;
     } else if (type === 'quiz') {
       $('pet-modal')?.classList.add('hidden');
-      if (typeof openJpQuizModal === 'function') openJpQuizModal();
+      loadNextQuizQuestion();
+      $('jp-quiz-modal')?.classList.remove('hidden');
       return;
+    } else if (type === 'sleep') {
+      triggerStageAnim('sleeping', 4500);
+      spawnPetParticles('💤', 4);
+      msg = 'Khò khò... Inu đang nằm cuộn tròn ngủ gật rồi 💤';
     } else if (type === 'style') {
       state.pet.scarf = ((state.pet.scarf || 0) + 1) % PET_SCARFS.length;
       saveState();
       const theme = applyPetScarf();
       triggerStageAnim('poked', 380);
+      spawnPetParticles('🎨', 5);
       playMeow();
       if ($('pet-mood-badge')) $('pet-mood-badge').textContent = `Khăn ${theme.name}`;
-      msg = `✨ Mochi đã đổi sang khăn quàng ${theme.name}!`;
+      msg = `✨ Bé Inu đã đổi sang khăn quàng ${theme.name}!`;
     }
     if ($('pet-modal-msg')) $('pet-modal-msg').textContent = msg;
     interactPet(msg);
@@ -2086,8 +2120,10 @@ Dữ liệu hiện tại của người dùng:
     });
     $('pet-modal-stage')?.addEventListener('click', () => doPetAction('poke'));
     $('btn-pet-dance')?.addEventListener('click', () => doPetAction('dance'));
+    $('btn-pet-spin')?.addEventListener('click', () => doPetAction('spin'));
     $('btn-pet-fortune')?.addEventListener('click', () => doPetAction('fortune'));
     $('btn-pet-quiz')?.addEventListener('click', () => doPetAction('quiz'));
+    $('btn-pet-sleep')?.addEventListener('click', () => doPetAction('sleep'));
     $('btn-pet-style')?.addEventListener('click', () => doPetAction('style'));
     applyPetScarf();
     $('btn-stretch')?.addEventListener('click', () => {
