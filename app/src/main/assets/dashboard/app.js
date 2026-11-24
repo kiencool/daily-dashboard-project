@@ -156,6 +156,8 @@
     quickNote: '',
     dayNotes: {},
     expenses: [],
+    waterLog: { date: '', count: 0 },
+    stretchReminder: false,
     jpFilter: { mode: 'topic', value: 'all' },
     customJpWords: [],
     updatedAt: 0
@@ -181,6 +183,7 @@
   let rainPlaying = false;
   let quizStreak = 0;
   let quizAnswer = null;
+  let stretchTimerId = null;
 
   const $ = (id) => document.getElementById(id);
 
@@ -204,6 +207,8 @@
         quickNote: typeof parsed.quickNote === 'string' ? parsed.quickNote : '',
         dayNotes: parsed.dayNotes && typeof parsed.dayNotes === 'object' ? parsed.dayNotes : {},
         expenses: Array.isArray(parsed.expenses) ? parsed.expenses : [],
+        waterLog: parsed.waterLog && typeof parsed.waterLog === 'object' ? parsed.waterLog : { date: '', count: 0 },
+        stretchReminder: Boolean(parsed.stretchReminder),
         jpFilter: parsed.jpFilter || { mode: 'topic', value: 'all' },
         customJpWords: Array.isArray(parsed.customJpWords) ? parsed.customJpWords : [],
         updatedAt: Number(parsed.updatedAt) || 0
@@ -235,6 +240,7 @@
         quickNote: state.quickNote,
         dayNotes: state.dayNotes,
         expenses: state.expenses,
+        waterLog: state.waterLog,
         updatedAt: state.updatedAt || Date.now()
       };
       await fetch(url, {
@@ -269,6 +275,7 @@
         if (typeof remote.quickNote === 'string') state.quickNote = remote.quickNote;
         if (remote.dayNotes && typeof remote.dayNotes === 'object') state.dayNotes = remote.dayNotes;
         if (Array.isArray(remote.expenses)) state.expenses = remote.expenses;
+        if (remote.waterLog && typeof remote.waterLog === 'object') state.waterLog = remote.waterLog;
         state.updatedAt = remoteTime;
         saveState(true);
         renderAll();
@@ -1334,6 +1341,47 @@ Dữ liệu hiện tại của người dùng:
     speakText(msg, 'vi-VN');
   }
 
+  // ===== WATER TRACKER & STRETCH REMINDER =====
+  function renderWater() {
+    const todayKey = new Date().toISOString().slice(0, 10);
+    if (!state.waterLog || state.waterLog.date !== todayKey) {
+      state.waterLog = { date: todayKey, count: 0 };
+    }
+    const cnt = state.waterLog.count || 0;
+    if ($('water-count')) $('water-count').textContent = `${cnt}/8`;
+    $('btn-water')?.classList.toggle('active', cnt >= 8);
+    $('btn-stretch')?.classList.toggle('active', Boolean(state.stretchReminder));
+  }
+
+  function addWaterCup() {
+    const todayKey = new Date().toISOString().slice(0, 10);
+    if (!state.waterLog || state.waterLog.date !== todayKey) {
+      state.waterLog = { date: todayKey, count: 0 };
+    }
+    state.waterLog.count += 1;
+    saveState();
+    renderWater();
+    if (state.waterLog.count === 8) {
+      playChime();
+      speakText('Tuyệt vời, bạn đã uống đủ 8 ly nước hôm nay!', 'vi-VN');
+    }
+  }
+
+  function applyStretchTimer() {
+    if (stretchTimerId) {
+      clearInterval(stretchTimerId);
+      stretchTimerId = null;
+    }
+    if (state.stretchReminder) {
+      stretchTimerId = setInterval(() => {
+        if (isIdleClockActive) return;
+        playChime();
+        speakText('Đã 60 phút rồi, uống một ngụm nước và vươn vai thư giãn nhé!', 'vi-VN');
+      }, 60 * 60 * 1000);
+    }
+    renderWater();
+  }
+
   // ===== N4 MINI QUIZ =====
   function loadNextQuizQuestion() {
     const pool = getFilteredJpWords();
@@ -1836,6 +1884,15 @@ Dữ liệu hiện tại của người dùng:
     });
     $('btn-rain')?.addEventListener('click', toggleRainSound);
     $('btn-briefing')?.addEventListener('click', playMorningBriefing);
+    $('btn-water')?.addEventListener('click', addWaterCup);
+    $('btn-stretch')?.addEventListener('click', () => {
+      state.stretchReminder = !state.stretchReminder;
+      saveState();
+      applyStretchTimer();
+      if (state.stretchReminder) {
+        speakText('Đã bật nhắc uống nước và vươn vai mỗi 60 phút.', 'vi-VN');
+      }
+    });
     $('btn-jp-filter').addEventListener('click', () => {
       renderJpFilterChips();
       $('jp-modal').classList.remove('hidden');
@@ -2135,6 +2192,7 @@ Dữ liệu hiện tại của người dùng:
   }
 
   function renderAll() {
+    renderWater();
     renderJapaneseWord();
     renderCalendar();
     renderGym();
@@ -2150,6 +2208,7 @@ Dữ liệu hiện tại của người dùng:
     applyBackground(state.settings.bg);
     bindEvents();
     renderKeepAwakeBtn();
+    applyStretchTimer();
     updateClock();
     renderAll();
     fetchWeather();
