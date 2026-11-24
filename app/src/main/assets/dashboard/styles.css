@@ -194,6 +194,11 @@ html[data-bg="cyber"] .cyber-grid { opacity: 1; }
   justify-content: center;
 }
 .corner-btn:active { transform: scale(0.92); }
+.corner-btn.active {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: transparent;
+}
 
 .pager {
   display: flex;
@@ -238,7 +243,7 @@ html[data-bg="cyber"] .cyber-grid { opacity: 1; }
   min-height: 36px;
   display: flex;
   align-items: center;
-  padding-right: 164px;
+  padding-right: 204px;
 }
 
 .weather-inline {
@@ -666,7 +671,7 @@ html[data-bg="cyber"] .cyber-grid { opacity: 1; }
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  padding-right: 164px;
+  padding-right: 204px;
   flex-shrink: 0;
 }
 

@@ -3,7 +3,7 @@
 
   const STORAGE_KEY = 'oppo_desk_dashboard_v4';
   const RING_CIRCUMFERENCE = 97.4;
-  const IDLE_TIMEOUT_MS = 30 * 1000;
+  const IDLE_TIMEOUT_MS = 60 * 1000;
   const THEMES = ['bento', 'standby', 'amber'];
   const BACKGROUNDS = ['aurora', 'stars', 'bokeh', 'cyber', 'oled'];
 
@@ -332,9 +332,27 @@
     }
   }
 
-  function enterIdleClock() {
-    const anyModalOpen = !$('action-sheet').classList.contains('hidden') || !$('settings-modal').classList.contains('hidden');
-    if (anyModalOpen) { resetIdleTimer(); return; }
+  function hasRunningTask() {
+    if (pomoTimerId !== null || rainPlaying) return true;
+    const modalIds = ['action-sheet', 'settings-modal', 'ai-modal', 'jp-modal', 'jp-quiz-modal', 'pomo-modal', 'day-popup'];
+    return modalIds.some((id) => $(id) && !$(id).classList.contains('hidden'));
+  }
+
+  function renderKeepAwakeBtn() {
+    const alwaysBright = !state.settings.idleClock;
+    $('btn-keep-awake')?.classList.toggle('active', alwaysBright);
+    if ($('btn-keep-awake')) {
+      $('btn-keep-awake').title = alwaysBright
+        ? 'Đang tắt tự giảm sáng (Chạm để bật lại)'
+        : 'Đang bật tự giảm sáng sau 1p (Chạm để tắt)';
+    }
+  }
+
+  function enterIdleClock(force = false) {
+    if (!force && (!state.settings.idleClock || hasRunningTask())) {
+      resetIdleTimer();
+      return;
+    }
     isIdleClockActive = true;
     $('idle-clock').classList.add('active');
     $('main-shell').classList.add('idle-hidden');
@@ -1549,7 +1567,18 @@ Dữ liệu hiện tại của người dùng:
     });
 
     $('idle-clock').addEventListener('click', exitIdleClock);
-    $('btn-clock-now').addEventListener('click', (e) => { e.stopPropagation(); enterIdleClock(); });
+    $('btn-keep-awake')?.addEventListener('click', () => {
+      state.settings.idleClock = !state.settings.idleClock;
+      saveState();
+      renderKeepAwakeBtn();
+      if (!state.settings.idleClock) {
+        if (idleTimer) clearTimeout(idleTimer);
+        exitIdleClock();
+      } else {
+        resetIdleTimer();
+      }
+    });
+    $('btn-clock-now').addEventListener('click', (e) => { e.stopPropagation(); enterIdleClock(true); });
 
     // GPU Touch-Swipe Pager (zero scroll-snap lag)
     let touchStartX = 0;
@@ -1972,6 +2001,7 @@ Dữ liệu hiện tại của người dùng:
       state.settings.autoDim = $('set-auto-dim').checked;
       saveState();
       $('settings-modal').classList.add('hidden');
+      renderKeepAwakeBtn();
       resetIdleTimer();
       fetchWeather();
       fetchVN30();
@@ -2035,6 +2065,7 @@ Dữ liệu hiện tại của người dùng:
     applyTheme(state.settings.theme);
     applyBackground(state.settings.bg);
     bindEvents();
+    renderKeepAwakeBtn();
     updateClock();
     renderAll();
     fetchWeather();

@@ -44,6 +44,9 @@
       <button class="corner-btn" id="btn-ai-chat" title="Trợ lý Gemini">
         <svg class="ico" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M19 16l.9 2.1L22 19l-2.1.9L19 22l-.9-2.1L16 19l2.1-.9L19 16z"/></svg>
       </button>
+      <button class="corner-btn" id="btn-keep-awake" title="Bật/Tắt tự giảm sáng sau 1 phút">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
+      </button>
       <button class="corner-btn" id="btn-clock-now" title="Mặt đồng hồ">
         <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
       </button>
@@ -619,7 +622,7 @@
         </label>
         <label class="check-line">
           <input type="checkbox" id="set-idle-clock" />
-          <span>Tự chuyển mặt đồng hồ & giảm sáng sau 30s</span>
+          <span>Tự chuyển mặt đồng hồ & giảm sáng sau 1 phút</span>
         </label>
         <label class="check-line">
           <input type="checkbox" id="set-auto-dim" />
