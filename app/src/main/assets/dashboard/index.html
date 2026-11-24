@@ -436,6 +436,25 @@
     </div>
   </div>
 
+  <!-- Mochi Pet Interaction Pop-up -->
+  <div class="sheet-backdrop hidden" id="pet-modal" style="align-items:center;padding:14px;">
+    <div class="popup-card" style="max-width:360px;">
+      <div class="sheet-head">
+        <h3>🐾 Bé mèo Mochi <small id="pet-love-badge" style="color:var(--rose);margin-left:6px;">❤️ 0</small></h3>
+        <button class="corner-btn" id="btn-close-pet">✕</button>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:4px 0;">
+        <div id="pet-modal-stage" style="transform:scale(1.35);margin:8px 0;"></div>
+        <div id="pet-modal-msg" style="font-size:0.86rem;font-weight:700;color:var(--accent);text-align:center;min-height:22px;">Meow~ Chạm nút bên dưới để chơi với Mochi nha!</div>
+      </div>
+      <div class="pet-actions">
+        <button type="button" class="pet-act-btn" id="btn-pet-pat">✋ Xoa đầu</button>
+        <button type="button" class="pet-act-btn" id="btn-pet-feed">🐟 Cho ăn</button>
+        <button type="button" class="pet-act-btn" id="btn-pet-play">🎮 Chơi đùa</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Water Bottle Tracker Pop-up -->
   <div class="sheet-backdrop hidden" id="water-modal" style="align-items:center;padding:14px;">
     <div class="popup-card" style="max-width:340px;">

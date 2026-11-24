@@ -43,9 +43,41 @@
     // Bài 33 - 36 - Du lịch & Công việc
     { kanji: '規則', kana: 'きそく', hv: 'QUY TẮC', vi: 'Quy tắc, nội quy', lesson: '33', topic: 'Công việc', ex: '会社の規則を守ります。' },
     { kanji: '注意します', kana: 'ちゅういします', hv: 'CHÚ Ý', vi: 'Chú ý, nhắc nhở', lesson: '34', topic: 'Du lịch', ex: '車に注意してください。' },
-    { kanji: '案内します', kana: 'あんないします', hv: 'ÁN NỘI', vi: 'Hướng dẫn, dẫn đường', lesson: '34', topic: 'Du lịch', ex: '友達を市内案内します。' },
+    { kanji: '案内します', kana: 'あんないします', hv: 'ÁN NỘI', vi: 'Hướng dẫn, dẫn đường', lesson: '34', topic: 'Du lịch', ex: '友達を案内します。' },
     { kanji: '習慣', kana: 'しゅうかん', hv: 'TẬP QUÁN', vi: 'Thói quen', lesson: '35', topic: 'Sức khỏe', ex: '早起きの習慣をつけます。' },
-    { kanji: '経験', kana: 'けいけん', hv: 'KINH NGHIỆM', vi: 'Kinh nghiệm', lesson: '36', topic: 'Công việc', ex: 'いい経験になりました。' }
+    { kanji: '経験', kana: 'けいけん', hv: 'KINH NGHIỆM', vi: 'Kinh nghiệm', lesson: '36', topic: 'Công việc', ex: 'いい経験になりました。' },
+    // Bài 37 - 40
+    { kanji: '褒めます', kana: 'ほめます', hv: 'BAO', vi: 'Khen ngợi', lesson: '37', topic: 'Công việc', ex: '先生に褒められました。' },
+    { kanji: '招待します', kana: 'しょうたいします', hv: 'CHIÊU ĐÃI', vi: 'Mời (tiệc, sự kiện)', lesson: '37', topic: 'Sinh hoạt', ex: 'パーティーに招待されました。' },
+    { kanji: '輸出します', kana: 'ゆしゅつします', hv: 'DU XUẤT', vi: 'Xuất khẩu', lesson: '37', topic: 'Công việc', ex: '日本へ米を輸出します。' },
+    { kanji: '育てます', kana: 'そだてます', hv: 'DỤC', vi: 'Nuôi dưỡng, trồng', lesson: '38', topic: 'Sinh hoạt', ex: '花を育てています。' },
+    { kanji: '参加します', kana: 'さんかします', hv: 'THAM GIA', vi: 'Tham gia', lesson: '38', topic: 'Công việc', ex: '会議に参加します。' },
+    { kanji: '安心します', kana: 'あんしんします', hv: 'AN TÂM', vi: 'Yên tâm', lesson: '39', topic: 'Tính từ', ex: '合格して安心しました。' },
+    { kanji: '遅刻します', kana: 'ちこくします', hv: 'TRÌ KHẮC', vi: 'Đi muộn (làm/học)', lesson: '39', topic: 'Công việc', ex: '会社に遅刻しました。' },
+    { kanji: '数えます', kana: 'かぞえます', hv: 'SỔ', vi: 'Đếm', lesson: '40', topic: 'Sinh hoạt', ex: '数を数えます。' },
+    { kanji: '確かめます', kana: 'たしかめます', hv: 'XÁC', vi: 'Kiểm tra lại, xác nhận', lesson: '40', topic: 'Công việc', ex: '予定を確かめます。' },
+    // Bài 41 - 45
+    { kanji: 'いただきます', kana: 'いただきます', hv: 'ĐÍNH', vi: 'Nhận (khiêm nhường)', lesson: '41', topic: 'Công việc', ex: '社長に本をいただきました。' },
+    { kanji: 'お祝い', kana: 'おいわい', hv: 'CHÚC', vi: 'Quà mừng, chúc mừng', lesson: '41', topic: 'Sinh hoạt', ex: '結婚のお祝いをあげます。' },
+    { kanji: '包みます', kana: 'つつみます', hv: 'BAO', vi: 'Gói, bọc', lesson: '42', topic: 'Sinh hoạt', ex: 'プレゼントを包みます。' },
+    { kanji: '沸かします', kana: 'わかします', hv: 'PHÍ', vi: 'Đun sôi (nước)', lesson: '42', topic: 'Sinh hoạt', ex: 'お湯を沸かします。' },
+    { kanji: '増えます', kana: 'ふえます', hv: 'TĂNG', vi: 'Tăng lên', lesson: '43', topic: 'Công việc', ex: '仕事が増えました。' },
+    { kanji: '減ります', kana: 'へります', hv: 'GIẢM', vi: 'Giảm xuống', lesson: '43', topic: 'Sức khỏe', ex: '体重が減りました。' },
+    { kanji: '泣きます', kana: 'なきます', hv: 'KHẤP', vi: 'Khóc', lesson: '44', topic: 'Tính từ', ex: '悲しくて泣きました。' },
+    { kanji: '笑います', kana: 'わらいます', hv: 'TIẾU', vi: 'Cười', lesson: '44', topic: 'Tính từ', ex: 'みんなで笑いました。' },
+    { kanji: '謝ります', kana: 'あやまります', hv: 'TẠ', vi: 'Xin lỗi', lesson: '45', topic: 'Công việc', ex: 'ミスをして謝りました。' },
+    { kanji: '信じます', kana: 'しんじます', hv: 'TÍN', vi: 'Tin tưởng', lesson: '45', topic: 'Tính từ', ex: '友達を信じます。' },
+    // Bài 46 - 50
+    { kanji: '届きます', kana: 'とどきます', hv: 'GIỚI', vi: 'Được gửi tới, đến nơi', lesson: '46', topic: 'Sinh hoạt', ex: '荷物が届きました。' },
+    { kanji: '焼きます', kana: 'やきます', hv: 'THIÊU', vi: 'Nướng, rán', lesson: '46', topic: 'Sinh hoạt', ex: 'パンを焼きます。' },
+    { kanji: '集まります', kana: 'あつまります', hv: 'TẬP', vi: 'Tập trung, tụ họp', lesson: '47', topic: 'Du lịch', ex: '駅前に集まります。' },
+    { kanji: '別れます', kana: 'わかれます', hv: 'BIỆT', vi: 'Chia tay', lesson: '47', topic: 'Tính từ', ex: '友達と別れました。' },
+    { kanji: 'おろします', kana: 'おろします', hv: 'HẠ', vi: 'Rút (tiền), hạ xuống', lesson: '48', topic: 'Sinh hoạt', ex: '銀行でお金をおろします。' },
+    { kanji: '録音します', kana: 'ろくおんします', hv: 'LỤC ÂM', vi: 'Ghi âm', lesson: '48', topic: 'Công việc', ex: '発音を録音します。' },
+    { kanji: 'いらっしゃいます', kana: 'いらっしゃいます', hv: 'TÔN KÍNH', vi: 'Đi/Đến/Ở (kính ngữ)', lesson: '49', topic: 'Công việc', ex: '先生がいらっしゃいます。' },
+    { kanji: '召し上がります', kana: 'めしあがります', hv: 'TRIỆU THƯỢNG', vi: 'Ăn/Uống (kính ngữ)', lesson: '49', topic: 'Công việc', ex: 'どうぞ召し上がってください。' },
+    { kanji: '参ります', kana: 'まいります', hv: 'THAM', vi: 'Đi/Đến (khiêm nhường)', lesson: '50', topic: 'Công việc', ex: '明日東京へ参ります。' },
+    { kanji: 'おります', kana: 'おります', hv: 'KHIÊM NHƯỜNG', vi: 'Ở, có mặt (khiêm nhường)', lesson: '50', topic: 'Công việc', ex: '今事務所におります。' }
   ];
 
   const EXERCISE_DB = [
@@ -158,6 +190,7 @@
     expenses: [],
     waterLog: { date: '', count: 0 },
     stretchReminder: false,
+    pet: { love: 10 },
     jpFilter: { mode: 'topic', value: 'all' },
     customJpWords: [],
     updatedAt: 0
@@ -209,6 +242,7 @@
         expenses: Array.isArray(parsed.expenses) ? parsed.expenses : [],
         waterLog: parsed.waterLog && typeof parsed.waterLog === 'object' ? parsed.waterLog : { date: '', count: 0 },
         stretchReminder: Boolean(parsed.stretchReminder),
+        pet: parsed.pet && typeof parsed.pet === 'object' ? parsed.pet : { love: 10 },
         jpFilter: parsed.jpFilter || { mode: 'topic', value: 'all' },
         customJpWords: Array.isArray(parsed.customJpWords) ? parsed.customJpWords : [],
         updatedAt: Number(parsed.updatedAt) || 0
@@ -420,7 +454,7 @@
 
   function hasRunningTask() {
     if (pomoTimerId !== null || rainPlaying) return true;
-    const modalIds = ['action-sheet', 'settings-modal', 'ai-modal', 'jp-modal', 'jp-quiz-modal', 'pomo-modal', 'water-modal', 'day-popup'];
+    const modalIds = ['action-sheet', 'settings-modal', 'ai-modal', 'jp-modal', 'jp-quiz-modal', 'pomo-modal', 'water-modal', 'pet-modal', 'day-popup'];
     return modalIds.some((id) => $(id) && !$(id).classList.contains('hidden'));
   }
 
@@ -1413,6 +1447,40 @@ Dữ liệu hiện tại của người dùng:
     petBubbleTimer = setTimeout(() => bubble.classList.add('hidden'), 3200);
   }
 
+  function openPetModal() {
+    if ($('pet-modal-stage') && $('pet-svg')) {
+      $('pet-modal-stage').innerHTML = $('pet-svg').outerHTML;
+    }
+    if ($('pet-love-badge')) {
+      $('pet-love-badge').textContent = `❤️ ${state.pet?.love || 0}`;
+    }
+    $('pet-modal')?.classList.remove('hidden');
+  }
+
+  function doPetAction(type) {
+    if (!state.pet) state.pet = { love: 0 };
+    let gain = 5;
+    let msg = '';
+    if (type === 'pat') {
+      gain = 5;
+      msg = 'Purr~ Xoa đầu thích quá đi! (+5 ❤️)';
+    } else if (type === 'feed') {
+      gain = 10;
+      msg = 'Ngon tuyệt cú mèo! Cảm ơn bạn nha 🐟 (+10 ❤️)';
+    } else {
+      gain = 8;
+      const list = getFilteredJpWords();
+      const w = list[Math.floor(Math.random() * list.length)];
+      msg = `Yay! Nhớ từ "${w.kanji}" (${w.kana}) = "${w.vi}" nha! (+8 ❤️)`;
+    }
+    state.pet.love = (state.pet.love || 0) + gain;
+    saveState();
+    if ($('pet-love-badge')) $('pet-love-badge').textContent = `❤️ ${state.pet.love}`;
+    if ($('pet-modal-msg')) $('pet-modal-msg').textContent = msg;
+    playChime();
+    interactPet(msg);
+  }
+
   function applyStretchTimer() {
     if (stretchTimerId) {
       clearInterval(stretchTimerId);
@@ -1940,7 +2008,14 @@ Dữ liệu hiện tại của người dùng:
     });
     $('btn-water-add')?.addEventListener('click', addWaterCup);
     $('btn-water-reset')?.addEventListener('click', resetWater);
-    $('desk-pet')?.addEventListener('click', () => interactPet());
+    $('desk-pet')?.addEventListener('click', openPetModal);
+    $('btn-close-pet')?.addEventListener('click', () => $('pet-modal')?.classList.add('hidden'));
+    $('pet-modal')?.addEventListener('click', (e) => {
+      if (e.target === $('pet-modal')) $('pet-modal').classList.add('hidden');
+    });
+    $('btn-pet-pat')?.addEventListener('click', () => doPetAction('pat'));
+    $('btn-pet-feed')?.addEventListener('click', () => doPetAction('feed'));
+    $('btn-pet-play')?.addEventListener('click', () => doPetAction('play'));
     $('btn-stretch')?.addEventListener('click', () => {
       state.stretchReminder = !state.stretchReminder;
       saveState();

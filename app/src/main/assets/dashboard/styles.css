@@ -1538,3 +1538,21 @@ html[data-bg="cyber"] .cyber-grid { opacity: 1; }
   color: var(--muted);
   font-weight: 700;
 }
+
+.pet-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.pet-act-btn {
+  border: 1px solid var(--border);
+  background: var(--inner);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 10px 6px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  text-align: center;
+}
+.pet-act-btn:active { transform: scale(0.94); background: rgba(124, 58, 237, 0.14); }
