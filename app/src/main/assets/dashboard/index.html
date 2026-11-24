@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="bento" data-bg="aurora">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#f4f5fb" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>DeskDash • OPPO A95</title>
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="dim-overlay" class="dim-overlay" aria-hidden="true"></div>
+
+  <!-- GPU-Friendly Background -->
+  <div class="bg-stage" aria-hidden="true">
+    <div class="aurora-static"></div>
+    <canvas id="fx-canvas" class="fx-canvas"></canvas>
+    <div class="cyber-grid"></div>
+  </div>
+
+  <!-- 30s Idle StandBy Clock (OLED Battery Saver) -->
+  <div id="idle-clock" class="idle-clock" aria-hidden="true">
+    <div class="idle-inner" id="idle-inner">
+      <div class="idle-top-meta">
+        <span id="idle-greeting">Xin chào</span>
+        <span id="idle-weather">⛅ --°</span>
+      </div>
+      <div class="idle-time-row">
+        <span class="idle-hm" id="idle-hm">00:00</span>
+        <span class="idle-sec" id="idle-sec">00</span>
+      </div>
+      <div class="idle-date" id="idle-date">Thứ ..., ngày ...</div>
+      <div class="idle-hint">Chạm màn hình để quay lại</div>
+    </div>
+  </div>
+
+  <!-- Main Swipeable Shell (5 Dedicated Pages for OPPO A95 20:9) -->
+  <div class="shell" id="main-shell">
+    <!-- Global Corner Tools (Aligned cleanly on pages 1-4; integrated in Home) -->
+    <div class="corner-tools">
+      <span class="net-pill"><span class="dot" id="net-dot"></span></span>
+      <button class="corner-btn" id="btn-ai-chat" title="Trợ lý Gemini">
+        <svg class="ico" viewBox="0 0 24 24"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M19 16l.9 2.1L22 19l-2.1.9L19 22l-.9-2.1L16 19l2.1-.9L19 16z"/></svg>
+      </button>
+      <button class="corner-btn" id="btn-clock-now" title="Mặt đồng hồ">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      </button>
+      <button class="corner-btn" id="btn-settings" title="Cài đặt">
+        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.77 1.02 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+
+    <div class="pager" id="pager">
+
+      <!-- PAGE 0: Trang chủ (Clean Asymmetric 2-Column Grid) -->
+      <section class="page" data-page="0">
+        <div class="home-grid-v2">
+          <!-- Left: Clock (Top) + White Mini Calendar (Bottom) -->
+          <div class="home-col-left">
+            <div class="glass-panel clock-card-compact">
+              <div class="clock-card-top">
+                <span class="home-greet" id="greeting">Xin chào</span>
+                <span class="sec-pill" id="clock-sec">00</span>
+              </div>
+              <div class="clock-compact-row">
+                <span class="clock-pretty-hm" id="clock-time">00:00</span>
+                <span class="clock-pretty-date" id="clock-date">Thứ ..., --/--</span>
+              </div>
+              <div class="focus-bar">
+                <button type="button" class="mini-focus-btn" id="btn-pomo" title="Bắt đầu / Tạm dừng Pomodoro">
+                  <svg class="ico-xs" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M9 3h6"/></svg>
+                  <span id="pomo-time">25:00</span>
+                </button>
+                <button type="button" class="mini-focus-btn" id="btn-pomo-mode" title="Tùy chỉnh thời gian đếm ngược">25p ▾</button>
+                <button type="button" class="mini-focus-btn" id="btn-rain" title="Âm thanh mưa tập trung">
+                  <svg class="ico-xs" viewBox="0 0 24 24"><path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"/><path d="M8 19v2"/><path d="M12 17v4"/><path d="M16 19v2"/></svg>
+                  Mưa
+                </button>
+                <button type="button" class="mini-focus-btn" id="btn-briefing" title="Nghe bản tin chào buổi sáng">
+                  <svg class="ico-xs" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  Bản tin
+                </button>
+              </div>
+            </div>
+
+            <div class="cal-card-white">
+              <div class="cal-head-white">
+                <button class="cal-nav-white" id="cal-prev" title="Tháng trước">
+                  <svg class="ico-sm" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <span class="cal-title-white" id="cal-title">Tháng 11, 2026</span>
+                <button class="cal-nav-white" id="cal-next" title="Tháng sau">
+                  <svg class="ico-sm" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+              </div>
+              <div class="cal-weekdays-white">
+                <span>T2</span><span>T3</span><span>T4</span><span>T5</span><span>T6</span><span>T7</span><span>CN</span>
+              </div>
+              <div class="cal-days-white" id="cal-days"></div>
+            </div>
+          </div>
+
+          <!-- Right: Weather (Aligned below corner tools) + N4 Card + 4-Pill Strip -->
+          <div class="home-col-right">
+            <div class="home-right-spacer">
+              <div class="weather-inline">
+                <span class="w-emoji-sm" id="weather-emoji">⛅</span>
+                <strong class="w-temp-sm" id="weather-temp">--°</strong>
+                <span class="w-city-sm" id="weather-city">TP. Hồ Chí Minh</span>
+                <span class="w-desc-sm" id="weather-desc">• Đang tải</span>
+                <span class="w-hum-sm" id="weather-humidity"></span>
+              </div>
+            </div>
+
+            <!-- JLPT N4 Vocabulary Widget -->
+            <div class="glass-panel jp-card" id="jp-card">
+              <div class="jp-top">
+                <button type="button" class="jp-mode-btn" id="btn-jp-filter" title="Chọn bài hoặc chủ đề N4">
+                  <svg class="ico-xs" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                  N4 • <span id="jp-filter-label">Tất cả</span> ▾
+                </button>
+                <div style="display:flex;align-items:center;gap:5px;">
+                  <span class="jp-hv" id="jp-hv">KẾ TỤC</span>
+                  <button type="button" class="jp-next-btn" id="btn-jp-speak" title="Nghe phát âm tiếng Nhật">
+                    <svg class="ico-xs" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  </button>
+                  <button type="button" class="jp-mode-btn" id="btn-jp-quiz" title="Kiểm tra nhanh N4">Quiz</button>
+                  <button type="button" class="jp-next-btn" id="btn-jp-next" title="Từ tiếp theo">
+                    <svg class="ico-xs" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                  </button>
+                </div>
+              </div>
+              <div class="jp-main" id="jp-body-tap">
+                <strong class="jp-kanji" id="jp-kanji">継続</strong>
+                <div class="jp-sub">
+                  <span class="jp-kana" id="jp-kana">けいぞく</span>
+                  <span class="jp-vi" id="jp-vi">Tiếp tục, duy trì</span>
+                  <span class="jp-ex" id="jp-ex">毎日継続して勉強します。</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4-Pill Quick Nav Strip -->
+            <div class="snap-strip">
+              <button class="snap-pill" data-jump-page="1">
+                <span class="snap-lbl"><svg class="ico-xs c-accent" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg> Đầu tư</span>
+                <strong id="snap-vn30">--</strong>
+              </button>
+              <button class="snap-pill" data-jump-page="2">
+                <span class="snap-lbl"><svg class="ico-xs c-green" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11"/><path d="M21 21l-1-1"/><path d="M3 3l1 1"/><path d="M18 22l4-4"/><path d="M2 6l4-4"/><path d="M3 10l7-7"/><path d="M14 21l7-7"/></svg> Gym</span>
+                <strong class="c-green" id="snap-gym">0/0</strong>
+              </button>
+              <button class="snap-pill" data-jump-page="3">
+                <span class="snap-lbl"><svg class="ico-xs c-amber" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg> Chi tiêu</span>
+                <strong class="c-amber" id="snap-exp">0đ</strong>
+              </button>
+              <button class="snap-pill" data-jump-page="4">
+                <span class="snap-lbl"><svg class="ico-xs c-accent" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> Công việc</span>
+                <strong class="c-accent" id="snap-todo">0</strong>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE 1: Đầu tư (HPG, FPT, BTC, ETH & Giá vàng Phú Hào) -->
+      <section class="page" data-page="1">
+        <div class="page-head">
+          <div class="page-title">
+            <svg class="ico c-accent" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg>
+            Đầu tư
+          </div>
+          <div class="head-right">
+            <span class="status-text" id="vn30-status">Đang tải...</span>
+            <button class="big-icon-btn" id="btn-refresh" title="Làm mới">
+              <svg class="ico-sm" viewBox="0 0 24 24"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="market-unified">
+          <div class="market-left-col">
+            <div class="glass-panel compact-panel">
+              <div class="snap-title">CỔ PHIẾU (HPG • FPT)</div>
+              <div class="compact-2col" id="vn30-list">
+                <div class="empty-msg">Đang tải HPG, FPT...</div>
+              </div>
+            </div>
+
+            <div class="glass-panel compact-panel">
+              <div class="snap-title">CRYPTO (BTC • ETH) & USD</div>
+              <div class="compact-2col" id="crypto-list">
+                <div class="empty-msg">Đang tải BTC, ETH...</div>
+              </div>
+              <div class="fx-inline">
+                <span>USD/VND:</span>
+                <strong id="fx-usd">--</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass-panel gold-panel">
+            <div class="gold-head">
+              <div>
+                <div class="snap-title" style="margin-bottom:2px;">GIÁ VÀNG PHÚ HÀO</div>
+                <div class="chart-sub">Nguồn: phuhao2.com</div>
+              </div>
+              <span class="status-text" id="gold-status">Đang tải...</span>
+            </div>
+            <div class="gold-list" id="gold-list">
+              <div class="empty-msg">Đang tải bảng giá vàng...</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE 2: Gym (Nhật ký tự ghi + Biểu đồ) -->
+      <section class="page" data-page="2">
+        <div class="page-head">
+          <div class="seg-tabs seg-sm" id="gym-sub-tabs">
+            <button class="seg-btn active" data-gym-sub="workout">Nhật ký tập</button>
+            <button class="seg-btn" data-gym-sub="charts">Biểu đồ</button>
+          </div>
+          <div class="head-right">
+            <button class="big-icon-btn add-btn" id="btn-add-gym">＋ Ghi bài tập</button>
+          </div>
+        </div>
+
+        <div class="gym-sub-pane" id="gym-pane-workout">
+          <div class="hub-split">
+            <div class="glass-panel hub-left">
+              <div>
+                <div class="banner-title">Tổng quan tập luyện</div>
+                <div class="ring-caption" id="gym-streak-info" style="margin-top:4px;">Đã tập: 0 buổi</div>
+              </div>
+              <div class="exp-kpis" style="grid-template-columns:repeat(3,1fr);">
+                <div class="exp-kpi"><span>Hôm nay</span><strong class="c-green" id="gym-today-count">0 bài</strong></div>
+                <div class="exp-kpi"><span>Tổng sets</span><strong class="c-amber" id="gym-today-sets">0 set</strong></div>
+                <div class="exp-kpi"><span>Volume</span><strong class="c-accent" id="gym-today-vol">0 kg</strong></div>
+              </div>
+            </div>
+            <ul class="scroll-list" id="gym-list"></ul>
+          </div>
+        </div>
+
+        <div class="gym-sub-pane hidden" id="gym-pane-charts">
+          <div class="charts-grid">
+            <div class="glass-panel chart-card">
+              <div class="chart-head">
+                <div>
+                  <div class="banner-title">Cân nặng (kg)</div>
+                  <div class="chart-sub" id="weight-summary">Chưa có dữ liệu</div>
+                </div>
+                <button class="big-icon-btn add-btn" id="btn-add-weight">＋ Cân</button>
+              </div>
+              <canvas id="weight-chart" class="chart-canvas"></canvas>
+            </div>
+            <div class="glass-panel chart-card">
+              <div class="chart-head">
+                <div>
+                  <div class="banner-title">Tần suất 14 ngày</div>
+                  <div class="chart-sub" id="workout-freq-summary">0 buổi / 14 ngày</div>
+                </div>
+              </div>
+              <canvas id="freq-chart" class="chart-canvas"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGE 3: Chi tiêu -->
+      <section class="page" data-page="3">
+        <div class="page-head">
+          <div class="page-title">
+            <svg class="ico c-amber" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+            Chi tiêu
+          </div>
+          <div class="head-right">
+            <button class="big-icon-btn" id="btn-edit-budget" title="Sửa ngân sách tháng">Ngân sách</button>
+            <button class="big-icon-btn add-btn" id="btn-add-expense">＋ Thu / Chi</button>
+          </div>
+        </div>
+
+        <div class="hub-split">
+          <div class="glass-panel hub-left">
+            <div class="exp-kpis">
+              <div class="exp-kpi"><span>Hôm nay</span><strong class="c-amber" id="exp-today">0đ</strong></div>
+              <div class="exp-kpi"><span>Tháng này</span><strong class="c-rose" id="exp-month">0đ</strong></div>
+              <div class="exp-kpi"><span>Còn lại</span><strong class="c-green" id="exp-left">0đ</strong></div>
+            </div>
+            <div class="ring-row">
+              <div class="ring-box">
+                <svg class="ring-svg" viewBox="0 0 36 36">
+                  <circle class="ring-bg" cx="18" cy="18" r="15.5" />
+                  <circle class="ring-fg ring-amber" id="budget-ring" cx="18" cy="18" r="15.5" />
+                </svg>
+                <span class="ring-num" id="budget-pct">0%</span>
+              </div>
+              <div>
+                <div style="font-weight:700;font-size:0.86rem;" id="budget-limit-label">Ngân sách: 6tr</div>
+                <span class="ring-caption">Ngân sách tháng đã dùng</span>
+              </div>
+            </div>
+          </div>
+          <ul class="scroll-list" id="expense-list"></ul>
+        </div>
+      </section>
+
+      <!-- PAGE 4: Công việc -->
+      <section class="page" data-page="4">
+        <div class="page-head">
+          <div class="page-title">
+            <svg class="ico c-accent" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Công việc
+          </div>
+          <button class="big-icon-btn add-btn" id="btn-add-todo">＋ Việc / Note</button>
+        </div>
+
+        <div class="hub-split">
+          <div class="glass-panel hub-left">
+            <div class="banner-title">Ghi chú nhanh</div>
+            <div class="note-box" id="note-preview-btn">
+              <span id="note-preview-text">Chạm vào đây để viết ghi chú...</span>
+            </div>
+            <div class="todo-badge-row">
+              <span>Còn lại:</span>
+              <strong class="c-accent" id="todo-count">0 việc</strong>
+            </div>
+          </div>
+          <ul class="scroll-list" id="todo-list"></ul>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- Bottom 5-Page Pill Bar -->
+    <nav class="page-dots" id="page-dots" aria-label="Chuyển trang">
+      <button class="dot-pill active" data-goto="0">Trang chủ</button>
+      <button class="dot-pill" data-goto="1">Đầu tư</button>
+      <button class="dot-pill" data-goto="2">Gym</button>
+      <button class="dot-pill" data-goto="3">Chi tiêu</button>
+      <button class="dot-pill" data-goto="4">Công việc</button>
+    </nav>
+  </div>
+
+  <!-- Gemini AI Chat Modal -->
+  <div class="sheet-backdrop hidden" id="ai-modal" style="align-items:center;padding:12px;">
+    <div class="popup-card ai-popup">
+      <div class="sheet-head">
+        <h3>Trợ lý Gemini</h3>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <button type="button" class="corner-btn active" id="btn-ai-tts" title="Bật/Tắt đọc câu trả lời">
+            <svg class="ico" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>
+          </button>
+          <button class="corner-btn" id="btn-close-ai">✕</button>
+        </div>
+      </div>
+      <div class="ai-quick-chips" id="ai-quick-chips">
+        <button type="button" class="jp-chip" data-ai-q="Giải thích từ N4 đang hiển thị và cho 2 ví dụ">Giải thích từ N4</button>
+        <button type="button" class="jp-chip" data-ai-q="Phân tích quá trình tập Gym và cân nặng của tôi">Phân tích Gym</button>
+        <button type="button" class="jp-chip" data-ai-q="Nhận xét chi tiêu tháng này của tôi">Nhận xét chi tiêu</button>
+      </div>
+      <div class="coach-chat ai-chat-box" id="ai-chat-box"></div>
+      <form class="coach-form" id="ai-chat-form">
+        <button type="button" class="corner-btn" id="btn-ai-mic" title="Nói bằng giọng nói">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        </button>
+        <input type="text" id="ai-chat-input" placeholder="Nói hoặc gõ câu hỏi cho Gemini..." autocomplete="off" />
+        <button type="submit" class="btn-primary-sm" id="ai-send-btn">Gửi</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Pomodoro Custom Timer Pop-up -->
+  <div class="sheet-backdrop hidden" id="pomo-modal" style="align-items:center;padding:14px;">
+    <div class="popup-card">
+      <div class="sheet-head">
+        <h3>⏱ Tùy chỉnh đếm ngược</h3>
+        <button class="corner-btn" id="btn-close-pomo">✕</button>
+      </div>
+      <div class="jp-chip-grid" id="pomo-presets">
+        <button type="button" class="jp-chip" data-pomo-min="15">15 phút</button>
+        <button type="button" class="jp-chip" data-pomo-min="25">25 phút</button>
+        <button type="button" class="jp-chip" data-pomo-min="45">45 phút</button>
+        <button type="button" class="jp-chip" data-pomo-min="60">60 phút</button>
+      </div>
+      <form id="pomo-custom-form" class="row-gap" style="margin-top:4px;">
+        <input type="number" id="pomo-custom-min" min="1" max="180" placeholder="Nhập số phút (vd: 30)" required />
+        <button type="submit" class="btn-primary-sm">Đặt giờ</button>
+      </form>
+      <button type="button" class="btn-secondary" id="btn-pomo-reset">↻ Đặt lại từ đầu</button>
+    </div>
+  </div>
+
+  <!-- JLPT N4 Mini Quiz Modal -->
+  <div class="sheet-backdrop hidden" id="jp-quiz-modal" style="align-items:center;padding:12px;">
+    <div class="popup-card">
+      <div class="sheet-head">
+        <h3>Ôn nhanh JLPT N4 <small id="quiz-streak" style="color:var(--green);margin-left:6px;">Chuỗi: 0</small></h3>
+        <button class="corner-btn" id="btn-close-quiz">✕</button>
+      </div>
+      <div style="text-align:center;padding:8px 0;">
+        <div style="font-size:2.2rem;font-weight:900;color:var(--text);" id="quiz-kanji">継続</div>
+        <div style="font-size:0.95rem;font-weight:700;color:var(--accent);" id="quiz-kana">けいぞく</div>
+      </div>
+      <div class="quiz-options" id="quiz-options"></div>
+      <div id="quiz-feedback" style="text-align:center;font-size:0.84rem;font-weight:700;min-height:20px;"></div>
+    </div>
+  </div>
+
+  <!-- JLPT N4 Filter Modal -->
+  <div class="sheet-backdrop hidden" id="jp-modal" style="align-items:center;padding:12px;">
+    <div class="popup-card">
+      <div class="sheet-head">
+        <h3>Học từ vựng JLPT N4</h3>
+        <button class="corner-btn" id="btn-close-jp">✕</button>
+      </div>
+      <div class="seg-tabs seg-sm" id="jp-mode-tabs">
+        <button type="button" class="seg-btn active" data-jp-mode="topic">Theo Chủ đề</button>
+        <button type="button" class="seg-btn" data-jp-mode="lesson">Theo Bài (Minna)</button>
+      </div>
+      <div class="jp-chip-grid" id="jp-filter-chips"></div>
+    </div>
+  </div>
+
+  <!-- Day Detail Pop-up Modal -->
+  <div class="sheet-backdrop hidden" id="day-popup" style="align-items:center;padding:16px;">
+    <div class="popup-card">
+      <div class="sheet-head">
+        <h3 id="popup-date-title">Ngày ...</h3>
+        <button class="corner-btn" id="btn-close-popup">✕</button>
+      </div>
+      <div class="popup-body" id="popup-body"></div>
+      <div class="row-gap" style="margin-top:4px;">
+        <button type="button" class="btn-secondary" id="btn-popup-add-gym">＋ Ghi bài tập</button>
+        <button type="button" class="btn-primary" id="btn-popup-add-todo" style="flex:1.2;">＋ Việc / Ghi chú ngày này</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Sheet -->
+  <div class="sheet-backdrop hidden" id="action-sheet">
+    <div class="sheet">
+      <div class="sheet-bar"></div>
+      <div class="sheet-head">
+        <h3 id="sheet-title">Thêm mới</h3>
+        <button class="corner-btn" id="btn-close-sheet">✕</button>
+      </div>
+
+      <form class="sheet-form hidden" id="form-expense">
+        <label class="field">
+          <span>Số tiền (VNĐ)</span>
+          <input type="number" id="exp-amount" placeholder="Ví dụ: 55000" min="1" required />
+        </label>
+        <label class="field">
+          <span>Danh mục</span>
+          <select id="exp-category">
+            <option value="Ăn uống">Ăn uống</option>
+            <option value="Di chuyển">Di chuyển</option>
+            <option value="Tập luyện">Tập luyện</option>
+            <option value="Mua sắm">Mua sắm</option>
+            <option value="Hóa đơn">Hóa đơn</option>
+            <option value="Khác">Khác</option>
+            <option value="Thu nhập">Thu nhập (+)</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Ghi chú</span>
+          <input type="text" id="exp-note" placeholder="Cà phê sáng, đổ xăng..." autocomplete="off" />
+        </label>
+        <button type="submit" class="btn-primary">Lưu giao dịch</button>
+      </form>
+
+      <form class="sheet-form hidden" id="form-gym">
+        <label class="field">
+          <span>Tên bài tập (thêm vào buổi đang chọn)</span>
+          <input type="text" id="gym-input" placeholder="Ví dụ: Bench Press 4x10" required autocomplete="off" />
+        </label>
+        <button type="submit" class="btn-primary">Thêm bài tập</button>
+      </form>
+
+      <form class="sheet-form hidden" id="form-weight">
+        <label class="field">
+          <span>Cân nặng hôm nay (kg)</span>
+          <input type="number" id="weight-input" step="0.1" min="20" max="250" placeholder="Ví dụ: 68.5" required />
+        </label>
+        <button type="submit" class="btn-primary">Lưu cân nặng</button>
+      </form>
+
+      <form class="sheet-form hidden" id="form-budget">
+        <label class="field">
+          <span>Ngân sách chi tiêu tháng (VNĐ)</span>
+          <input type="number" id="budget-input" min="0" step="100000" placeholder="Ví dụ: 6000000" required />
+        </label>
+        <button type="submit" class="btn-primary">Cập nhật ngân sách</button>
+      </form>
+
+      <form class="sheet-form hidden" id="form-log-set">
+        <div class="row-gap">
+          <label class="field" style="flex:1;">
+            <span>Nhóm cơ</span>
+            <select id="log-muscle">
+              <option value="Ngực">Ngực</option>
+              <option value="Lưng">Lưng</option>
+              <option value="Chân">Chân</option>
+              <option value="Vai">Vai</option>
+              <option value="Tay trước">Tay trước</option>
+              <option value="Tay sau">Tay sau</option>
+              <option value="Bụng">Bụng</option>
+              <option value="Cardio">Cardio / Toàn thân</option>
+            </select>
+          </label>
+          <label class="field" style="flex:1.4;">
+            <span>Tên bài tập</span>
+            <input type="text" id="log-ex-name" placeholder="Bench Press, Chạy bộ..." required autocomplete="off" />
+          </label>
+        </div>
+
+        <div id="log-strength-fields" class="sheet-form">
+          <div class="row-gap">
+            <label class="field" style="flex:1;">
+              <span>Mức tạ (kg)</span>
+              <input type="number" id="log-weight" step="0.5" min="0" value="0" />
+            </label>
+            <label class="field" style="flex:1;">
+              <span>Số reps / set</span>
+              <input type="number" id="log-reps" min="1" value="10" />
+            </label>
+          </div>
+          <div class="field">
+            <span>Số sets</span>
+            <div class="row-gap" style="align-items:center;">
+              <div class="seg-tabs seg-sm" id="log-set-pills">
+                <button type="button" class="seg-btn" data-sets="2">2</button>
+                <button type="button" class="seg-btn" data-sets="3">3</button>
+                <button type="button" class="seg-btn active" data-sets="4">4</button>
+                <button type="button" class="seg-btn" data-sets="5">5</button>
+                <button type="button" class="seg-btn" data-sets="6">6</button>
+              </div>
+              <input type="number" id="log-sets" min="1" value="4" style="max-width:72px;text-align:center;" />
+            </div>
+          </div>
+        </div>
+
+        <div id="log-cardio-fields" class="sheet-form hidden">
+          <div class="field">
+            <span>Thời gian tập (phút)</span>
+            <div class="row-gap" style="align-items:center;">
+              <div class="seg-tabs seg-sm" id="log-min-pills">
+                <button type="button" class="seg-btn" data-mins="15">15p</button>
+                <button type="button" class="seg-btn" data-mins="20">20p</button>
+                <button type="button" class="seg-btn active" data-mins="30">30p</button>
+                <button type="button" class="seg-btn" data-mins="45">45p</button>
+                <button type="button" class="seg-btn" data-mins="60">60p</button>
+              </div>
+              <input type="number" id="log-minutes" min="1" value="30" style="max-width:72px;text-align:center;" />
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">Lưu bài tập</button>
+      </form>
+
+      <div class="sheet-form hidden" id="form-todo-note">
+        <label class="field">
+          <span>Chọn ngày</span>
+          <input type="date" id="todo-date" />
+        </label>
+        <form id="todo-add-form" class="row-gap">
+          <input type="text" id="todo-input" placeholder="Thêm việc cần làm cho ngày này..." autocomplete="off" />
+          <button type="submit" class="btn-primary-sm">Thêm</button>
+        </form>
+        <label class="field">
+          <span>Ghi chú cho ngày đã chọn</span>
+          <textarea id="day-note-input" rows="2" placeholder="Ghi chú riêng cho ngày này..."></textarea>
+        </label>
+        <label class="field">
+          <span>Ghi chú chung (luôn hiện ở trang Công việc)</span>
+          <textarea id="quick-note" rows="2" placeholder="Viết ghi chú chung..."></textarea>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Sheet -->
+  <div class="sheet-backdrop hidden" id="settings-modal">
+    <div class="sheet">
+      <div class="sheet-bar"></div>
+      <div class="sheet-head">
+        <h3>Cài đặt</h3>
+        <button class="corner-btn" id="btn-close-settings">✕</button>
+      </div>
+      <div class="sheet-form">
+        <label class="field">
+          <span>Thành phố (Thời tiết)</span>
+          <select id="set-city">
+            <option value="10.8231,106.6297,TP. Hồ Chí Minh">TP. Hồ Chí Minh</option>
+            <option value="21.0285,105.8542,Hà Nội">Hà Nội</option>
+            <option value="16.0544,108.2022,Đà Nẵng">Đà Nẵng</option>
+            <option value="20.8449,106.6881,Hải Phòng">Hải Phòng</option>
+            <option value="10.0452,105.7469,Cần Thơ">Cần Thơ</option>
+            <option value="12.2388,109.1967,Nha Trang">Nha Trang</option>
+            <option value="11.9404,108.4583,Đà Lạt">Đà Lạt</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Mã cổ phiếu theo dõi (cách nhau dấu phẩy)</span>
+          <input type="text" id="set-vn30" placeholder="HPG, FPT, VCB" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>Mã Crypto theo dõi (cách nhau dấu phẩy)</span>
+          <input type="text" id="set-coins" placeholder="BTC, ETH" autocomplete="off" />
+        </label>
+        <label class="field">
+          <span>Gemini API Key</span>
+          <input type="password" id="set-gemini-key" placeholder="API Key..." autocomplete="off" />
+        </label>
+        <label class="check-line">
+          <input type="checkbox" id="set-idle-clock" />
+          <span>Tự chuyển mặt đồng hồ & giảm sáng sau 30s</span>
+        </label>
+        <label class="check-line">
+          <input type="checkbox" id="set-auto-dim" />
+          <span>Tự động dịu mắt ban đêm (22:00 – 06:00)</span>
+        </label>
+        <div class="row-gap">
+          <button type="button" class="btn-secondary" id="btn-export">Xuất JSON</button>
+          <label class="btn-secondary">
+            Nhập JSON
+            <input type="file" id="btn-import" accept="application/json" hidden />
+          </label>
+        </div>
+        <button type="button" class="btn-primary" id="btn-save-settings">Lưu cài đặt</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
