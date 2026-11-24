@@ -68,8 +68,28 @@
                 <span class="sec-pill" id="clock-sec">00</span>
               </div>
               <div class="clock-compact-row">
-                <span class="clock-pretty-hm" id="clock-time">00:00</span>
-                <span class="clock-pretty-date" id="clock-date">Thứ ..., --/--</span>
+                <div>
+                  <span class="clock-pretty-hm" id="clock-time">00:00</span>
+                  <div class="clock-pretty-date" id="clock-date">Thứ ..., --/--</div>
+                </div>
+                <button type="button" class="desk-pet" id="desk-pet" title="Chạm vào Mochi để tương tác!">
+                  <div class="pet-bubble hidden" id="pet-bubble">Chào bạn!</div>
+                  <svg class="pet-svg" id="pet-svg" viewBox="0 0 64 64">
+                    <!-- Cute Mochi Cat-Bot -->
+                    <path d="M14 26 L18 10 L28 20 Z" fill="#c4b5fd"/>
+                    <path d="M50 26 L46 10 L36 20 Z" fill="#c4b5fd"/>
+                    <rect x="12" y="18" width="40" height="34" rx="16" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5"/>
+                    <rect x="18" y="25" width="28" height="18" rx="9" fill="#1e1b4b"/>
+                    <!-- Eyes -->
+                    <circle class="pet-eye" cx="26" cy="34" r="2.6" fill="#34d399"/>
+                    <circle class="pet-eye" cx="38" cy="34" r="2.6" fill="#34d399"/>
+                    <!-- Blush -->
+                    <circle cx="21" cy="38" r="2.2" fill="#fb7185" opacity="0.65"/>
+                    <circle cx="43" cy="38" r="2.2" fill="#fb7185" opacity="0.65"/>
+                    <!-- Smile -->
+                    <path id="pet-mouth" d="M29 37 Q32 40 35 37" fill="none" stroke="#a7f3d0" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </button>
               </div>
               <div class="focus-bar">
                 <button type="button" class="mini-focus-btn" id="btn-pomo" title="Bắt đầu / Tạm dừng Pomodoro">
@@ -88,6 +108,7 @@
                 <button type="button" class="mini-focus-btn" id="btn-water" title="Chạm để +1 ly nước hôm nay">
                   💧 <span id="water-count">0/8</span>
                 </button>
+                <button type="button" class="mini-focus-btn" id="btn-water-reset" title="Đặt lại nước về 0/8">↻</button>
                 <button type="button" class="mini-focus-btn" id="btn-stretch" title="Bật/Tắt nhắc uống nước & vươn vai mỗi 60 phút">
                   🧘 Nhắc
                 </button>

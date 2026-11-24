@@ -1361,10 +1361,48 @@ Dữ liệu hiện tại của người dùng:
     state.waterLog.count += 1;
     saveState();
     renderWater();
+    interactPet(`Đã uống ${state.waterLog.count}/8 ly! 💧`);
     if (state.waterLog.count === 8) {
       playChime();
       speakText('Tuyệt vời, bạn đã uống đủ 8 ly nước hôm nay!', 'vi-VN');
     }
+  }
+
+  function resetWater() {
+    const todayKey = new Date().toISOString().slice(0, 10);
+    state.waterLog = { date: todayKey, count: 0 };
+    saveState();
+    renderWater();
+    interactPet('Đã đặt lại nước về 0/8!');
+  }
+
+  let petBubbleTimer = null;
+  function interactPet(customMsg = '') {
+    const pet = $('desk-pet');
+    const bubble = $('pet-bubble');
+    if (!pet || !bubble) return;
+
+    pet.classList.remove('hop');
+    void pet.offsetWidth;
+    pet.classList.add('hop');
+    setTimeout(() => pet.classList.remove('hop'), 280);
+
+    const h = new Date().getHours();
+    const water = state.waterLog?.count || 0;
+    const remTodos = state.todos.filter((t) => !t.done).length;
+    const phrases = [
+      `Hôm nay uống ${water}/8 ly nước rồi! 💧`,
+      remTodos > 0 ? `Còn ${remTodos} việc cần làm đó!` : 'Xong hết việc rồi, đỉnh quá!',
+      'Đừng quên ôn 1 từ N4 nha! 🇯🇵',
+      pomoTimerId ? 'Đang tập trung cực tốt! ⏱' : 'Bấm 25:00 để tập trung nhé!',
+      h >= 22 ? 'Khuya rồi, nhớ ngủ sớm nha 🌙' : 'Cố lên, bạn làm được mà! ✨',
+      'Nhớ vươn vai cho đỡ mỏi lưng nhé!'
+    ];
+
+    bubble.textContent = customMsg || phrases[Math.floor(Math.random() * phrases.length)];
+    bubble.classList.remove('hidden');
+    if (petBubbleTimer) clearTimeout(petBubbleTimer);
+    petBubbleTimer = setTimeout(() => bubble.classList.add('hidden'), 3200);
   }
 
   function applyStretchTimer() {
@@ -1885,6 +1923,8 @@ Dữ liệu hiện tại của người dùng:
     $('btn-rain')?.addEventListener('click', toggleRainSound);
     $('btn-briefing')?.addEventListener('click', playMorningBriefing);
     $('btn-water')?.addEventListener('click', addWaterCup);
+    $('btn-water-reset')?.addEventListener('click', resetWater);
+    $('desk-pet')?.addEventListener('click', () => interactPet());
     $('btn-stretch')?.addEventListener('click', () => {
       state.stretchReminder = !state.stretchReminder;
       saveState();
