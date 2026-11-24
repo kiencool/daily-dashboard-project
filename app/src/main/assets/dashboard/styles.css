@@ -1401,6 +1401,43 @@ html[data-bg="cyber"] .cyber-grid { opacity: 1; }
   }
 }
 
+@media (orientation: landscape) and (max-height: 560px) {
+  .page {
+    padding: 6px 12px 44px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .clock-card-compact {
+    padding: 6px 10px;
+  }
+  .clock-pretty-hm {
+    font-size: clamp(1.65rem, 3.8vw, 2.3rem);
+  }
+  .clock-pretty-date {
+    font-size: 0.76rem;
+  }
+  .desk-pet .pet-svg {
+    width: 46px;
+    height: 46px;
+  }
+  .cal-card-white {
+    min-height: 178px;
+    padding: 5px 8px;
+  }
+  .cal-title-white {
+    font-size: 0.76rem;
+  }
+  .cal-nav-white {
+    width: 20px;
+    height: 20px;
+    font-size: 0.84rem;
+  }
+  .cal-day-w {
+    min-height: 15px;
+    font-size: 0.64rem;
+  }
+}
+
 /* ===== POMODORO, RAIN & N4 QUIZ ===== */
 .focus-bar {
   display: flex;
@@ -1541,7 +1578,7 @@ html[data-bg="cyber"] .cyber-grid { opacity: 1; }
 
 .pet-actions {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
 }
 .pet-act-btn {
@@ -1549,10 +1586,31 @@ html[data-bg="cyber"] .cyber-grid { opacity: 1; }
   background: var(--inner);
   color: var(--text);
   border-radius: 12px;
-  padding: 10px 6px;
-  font-size: 0.8rem;
+  padding: 10px 8px;
+  font-size: 0.82rem;
   font-weight: 800;
   cursor: pointer;
   text-align: center;
 }
 .pet-act-btn:active { transform: scale(0.94); background: rgba(124, 58, 237, 0.14); }
+#pet-modal-stage {
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.2s ease;
+}
+#pet-modal-stage.dancing .pet-svg {
+  animation: petDance 0.45s ease-in-out 4 !important;
+}
+#pet-modal-stage.poked .pet-svg {
+  animation: petPoke 0.36s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+@keyframes petDance {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  25% { transform: rotate(-12deg) translateY(-6px); }
+  75% { transform: rotate(12deg) translateY(-6px); }
+}
+@keyframes petPoke {
+  0% { transform: scale(1); }
+  45% { transform: scale(1.18, 0.86) translateY(4px); }
+  100% { transform: scale(1) translateY(0); }
+}

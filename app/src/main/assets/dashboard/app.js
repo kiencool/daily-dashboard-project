@@ -190,7 +190,7 @@
     expenses: [],
     waterLog: { date: '', count: 0 },
     stretchReminder: false,
-    pet: { love: 10 },
+    pet: { scarf: 0 },
     jpFilter: { mode: 'topic', value: 'all' },
     customJpWords: [],
     updatedAt: 0
@@ -242,7 +242,7 @@
         expenses: Array.isArray(parsed.expenses) ? parsed.expenses : [],
         waterLog: parsed.waterLog && typeof parsed.waterLog === 'object' ? parsed.waterLog : { date: '', count: 0 },
         stretchReminder: Boolean(parsed.stretchReminder),
-        pet: parsed.pet && typeof parsed.pet === 'object' ? parsed.pet : { love: 10 },
+        pet: parsed.pet && typeof parsed.pet === 'object' ? parsed.pet : { scarf: 0 },
         jpFilter: parsed.jpFilter || { mode: 'topic', value: 'all' },
         customJpWords: Array.isArray(parsed.customJpWords) ? parsed.customJpWords : [],
         updatedAt: Number(parsed.updatedAt) || 0
@@ -1447,37 +1447,108 @@ Dữ liệu hiện tại của người dùng:
     petBubbleTimer = setTimeout(() => bubble.classList.add('hidden'), 3200);
   }
 
+  const PET_SCARFS = [
+    { name: 'Tím Hồng', c1: '#a855f7', c2: '#ec4899' },
+    { name: 'Xanh Biển', c1: '#0ea5e9', c2: '#6366f1' },
+    { name: 'Vàng Nắng', c1: '#f59e0b', c2: '#ef4444' },
+    { name: 'Xanh Mint', c1: '#10b981', c2: '#14b8a6' },
+    { name: 'Đỏ May Mắn', c1: '#e11d48', c2: '#f97316' }
+  ];
+
+  const PET_FORTUNES = [
+    '大吉 Đại Cát: Hôm nay học từ vựng cực nhanh, nhớ lâu bất ngờ!',
+    '中吉 Trung Cát: Uống đủ 8 ly nước sẽ có năng lượng làm xong hết việc!',
+    '小吉 Tiểu Cát: Chú ý chi tiêu một chút, cuối ngày sẽ thấy nhẹ nhõm.',
+    '吉 Cát: Tập trung 1 phiên Pomodoro 25 phút ngay bây giờ rất hợp đó!',
+    '大吉 Đại Cát: Hôm nay có tin vui nhỏ, giữ tinh thần thoải mái nhé!'
+  ];
+
+  function playMeow() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      const now = ctx.currentTime;
+      osc.frequency.setValueAtTime(520, now);
+      osc.frequency.exponentialRampToValueAtTime(760, now + 0.11);
+      osc.frequency.exponentialRampToValueAtTime(420, now + 0.32);
+      gain.gain.setValueAtTime(0.01, now);
+      gain.gain.linearRampToValueAtTime(0.14, now + 0.08);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.34);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(now);
+      osc.stop(now + 0.35);
+    } catch { /* ignore */ }
+  }
+
+  function applyPetScarf() {
+    const idx = ((state.pet?.scarf || 0) % PET_SCARFS.length + PET_SCARFS.length) % PET_SCARFS.length;
+    const theme = PET_SCARFS[idx];
+    document.querySelectorAll('#mochiScarf').forEach((grad) => {
+      const stops = grad.querySelectorAll('stop');
+      if (stops[0]) stops[0].setAttribute('stop-color', theme.c1);
+      if (stops[1]) stops[1].setAttribute('stop-color', theme.c2);
+    });
+    return theme;
+  }
+
   function openPetModal() {
     if ($('pet-modal-stage') && $('pet-svg')) {
       $('pet-modal-stage').innerHTML = $('pet-svg').outerHTML;
     }
-    if ($('pet-love-badge')) {
-      $('pet-love-badge').textContent = `❤️ ${state.pet?.love || 0}`;
+    const theme = applyPetScarf();
+    if ($('pet-mood-badge')) {
+      $('pet-mood-badge').textContent = `Khăn ${theme.name}`;
     }
     $('pet-modal')?.classList.remove('hidden');
   }
 
+  function triggerStageAnim(cls, ms = 450) {
+    const stage = $('pet-modal-stage');
+    if (!stage) return;
+    stage.classList.remove('dancing', 'poked');
+    void stage.offsetWidth;
+    stage.classList.add(cls);
+    setTimeout(() => stage.classList.remove(cls), ms);
+  }
+
   function doPetAction(type) {
-    if (!state.pet) state.pet = { love: 0 };
-    let gain = 5;
+    if (!state.pet || typeof state.pet !== 'object') state.pet = { scarf: 0 };
     let msg = '';
-    if (type === 'pat') {
-      gain = 5;
-      msg = 'Purr~ Xoa đầu thích quá đi! (+5 ❤️)';
-    } else if (type === 'feed') {
-      gain = 10;
-      msg = 'Ngon tuyệt cú mèo! Cảm ơn bạn nha 🐟 (+10 ❤️)';
-    } else {
-      gain = 8;
-      const list = getFilteredJpWords();
-      const w = list[Math.floor(Math.random() * list.length)];
-      msg = `Yay! Nhớ từ "${w.kanji}" (${w.kana}) = "${w.vi}" nha! (+8 ❤️)`;
+    if (type === 'poke') {
+      playMeow();
+      triggerStageAnim('poked', 380);
+      const tips = [
+        `Meow~ Hôm nay đã uống ${state.waterLog?.count || 0}/8 ly nước rồi!`,
+        `Còn ${state.todos.filter((t) => !t.done).length} việc đang chờ bạn đó!`,
+        'Meow! Vuốt nhẹ thôi nha, nhột quá đi~ 🐾',
+        'Đừng quên tập vài động tác giãn cơ cho đỡ mỏi lưng nhé!'
+      ];
+      msg = tips[Math.floor(Math.random() * tips.length)];
+    } else if (type === 'dance') {
+      playChime();
+      triggerStageAnim('dancing', 1800);
+      msg = 'Meow meow~ 🎶 Lắc lư thư giãn theo nhịp nào!';
+    } else if (type === 'fortune') {
+      playMeow();
+      triggerStageAnim('poked', 380);
+      msg = `🎋 ${PET_FORTUNES[Math.floor(Math.random() * PET_FORTUNES.length)]}`;
+    } else if (type === 'quiz') {
+      $('pet-modal')?.classList.add('hidden');
+      if (typeof openJpQuizModal === 'function') openJpQuizModal();
+      return;
+    } else if (type === 'style') {
+      state.pet.scarf = ((state.pet.scarf || 0) + 1) % PET_SCARFS.length;
+      saveState();
+      const theme = applyPetScarf();
+      triggerStageAnim('poked', 380);
+      playMeow();
+      if ($('pet-mood-badge')) $('pet-mood-badge').textContent = `Khăn ${theme.name}`;
+      msg = `✨ Mochi đã đổi sang khăn quàng ${theme.name}!`;
     }
-    state.pet.love = (state.pet.love || 0) + gain;
-    saveState();
-    if ($('pet-love-badge')) $('pet-love-badge').textContent = `❤️ ${state.pet.love}`;
     if ($('pet-modal-msg')) $('pet-modal-msg').textContent = msg;
-    playChime();
     interactPet(msg);
   }
 
@@ -2013,9 +2084,12 @@ Dữ liệu hiện tại của người dùng:
     $('pet-modal')?.addEventListener('click', (e) => {
       if (e.target === $('pet-modal')) $('pet-modal').classList.add('hidden');
     });
-    $('btn-pet-pat')?.addEventListener('click', () => doPetAction('pat'));
-    $('btn-pet-feed')?.addEventListener('click', () => doPetAction('feed'));
-    $('btn-pet-play')?.addEventListener('click', () => doPetAction('play'));
+    $('pet-modal-stage')?.addEventListener('click', () => doPetAction('poke'));
+    $('btn-pet-dance')?.addEventListener('click', () => doPetAction('dance'));
+    $('btn-pet-fortune')?.addEventListener('click', () => doPetAction('fortune'));
+    $('btn-pet-quiz')?.addEventListener('click', () => doPetAction('quiz'));
+    $('btn-pet-style')?.addEventListener('click', () => doPetAction('style'));
+    applyPetScarf();
     $('btn-stretch')?.addEventListener('click', () => {
       state.stretchReminder = !state.stretchReminder;
       saveState();
