@@ -420,7 +420,7 @@
 
   function hasRunningTask() {
     if (pomoTimerId !== null || rainPlaying) return true;
-    const modalIds = ['action-sheet', 'settings-modal', 'ai-modal', 'jp-modal', 'jp-quiz-modal', 'pomo-modal', 'day-popup'];
+    const modalIds = ['action-sheet', 'settings-modal', 'ai-modal', 'jp-modal', 'jp-quiz-modal', 'pomo-modal', 'water-modal', 'day-popup'];
     return modalIds.some((id) => $(id) && !$(id).classList.contains('hidden'));
   }
 
@@ -1351,6 +1351,14 @@ Dữ liệu hiện tại của người dùng:
     if ($('water-count')) $('water-count').textContent = `${cnt}/8`;
     $('btn-water')?.classList.toggle('active', cnt >= 8);
     $('btn-stretch')?.classList.toggle('active', Boolean(state.stretchReminder));
+
+    if ($('water-modal-count')) $('water-modal-count').textContent = `${cnt} / 8 ly`;
+    if ($('water-modal-ml')) $('water-modal-ml').textContent = `${(cnt * 250).toLocaleString('vi-VN')} / 2,000 ml`;
+    if ($('bottle-fill-rect')) {
+      const pct = Math.min(1, cnt / 8);
+      const yPos = 150 - pct * 118; // 150 (empty) -> 32 (full)
+      $('bottle-fill-rect').setAttribute('y', String(yPos));
+    }
   }
 
   function addWaterCup() {
@@ -1922,7 +1930,15 @@ Dữ liệu hiện tại của người dùng:
     });
     $('btn-rain')?.addEventListener('click', toggleRainSound);
     $('btn-briefing')?.addEventListener('click', playMorningBriefing);
-    $('btn-water')?.addEventListener('click', addWaterCup);
+    $('btn-water')?.addEventListener('click', () => {
+      renderWater();
+      $('water-modal')?.classList.remove('hidden');
+    });
+    $('btn-close-water')?.addEventListener('click', () => $('water-modal')?.classList.add('hidden'));
+    $('water-modal')?.addEventListener('click', (e) => {
+      if (e.target === $('water-modal')) $('water-modal').classList.add('hidden');
+    });
+    $('btn-water-add')?.addEventListener('click', addWaterCup);
     $('btn-water-reset')?.addEventListener('click', resetWater);
     $('desk-pet')?.addEventListener('click', () => interactPet());
     $('btn-stretch')?.addEventListener('click', () => {

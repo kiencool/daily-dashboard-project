@@ -74,20 +74,54 @@
                 </div>
                 <button type="button" class="desk-pet" id="desk-pet" title="Chạm vào Mochi để tương tác!">
                   <div class="pet-bubble hidden" id="pet-bubble">Chào bạn!</div>
-                  <svg class="pet-svg" id="pet-svg" viewBox="0 0 64 64">
-                    <!-- Cute Mochi Cat-Bot -->
-                    <path d="M14 26 L18 10 L28 20 Z" fill="#c4b5fd"/>
-                    <path d="M50 26 L46 10 L36 20 Z" fill="#c4b5fd"/>
-                    <rect x="12" y="18" width="40" height="34" rx="16" fill="#ede9fe" stroke="#7c3aed" stroke-width="2.5"/>
-                    <rect x="18" y="25" width="28" height="18" rx="9" fill="#1e1b4b"/>
-                    <!-- Eyes -->
-                    <circle class="pet-eye" cx="26" cy="34" r="2.6" fill="#34d399"/>
-                    <circle class="pet-eye" cx="38" cy="34" r="2.6" fill="#34d399"/>
-                    <!-- Blush -->
-                    <circle cx="21" cy="38" r="2.2" fill="#fb7185" opacity="0.65"/>
-                    <circle cx="43" cy="38" r="2.2" fill="#fb7185" opacity="0.65"/>
-                    <!-- Smile -->
-                    <path id="pet-mouth" d="M29 37 Q32 40 35 37" fill="none" stroke="#a7f3d0" stroke-width="2" stroke-linecap="round"/>
+                  <svg class="pet-svg" id="pet-svg" viewBox="0 0 96 96">
+                    <defs>
+                      <linearGradient id="mochiBody" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stop-color="#ffffff"/>
+                        <stop offset="100%" stop-color="#ede9fe"/>
+                      </linearGradient>
+                      <linearGradient id="mochiScarf" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="#a855f7"/>
+                        <stop offset="100%" stop-color="#ec4899"/>
+                      </linearGradient>
+                    </defs>
+                    <!-- Soft shadow -->
+                    <ellipse cx="48" cy="86" rx="22" ry="4.5" fill="rgba(124,58,237,0.18)"/>
+                    <!-- Swaying Tail -->
+                    <path class="pet-tail" d="M68 68 Q84 64 80 48 Q78 42 73 45" fill="none" stroke="#ddd6fe" stroke-width="7" stroke-linecap="round"/>
+                    <!-- Ears outer -->
+                    <path d="M23 36 L20 13 Q20 10 24 12 L39 24 Z" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.2" stroke-linejoin="round"/>
+                    <path d="M73 36 L76 13 Q76 10 72 12 L57 24 Z" fill="#f5f3ff" stroke="#7c3aed" stroke-width="2.2" stroke-linejoin="round"/>
+                    <!-- Ears inner pink -->
+                    <path d="M26 31 L24 18 L34 25 Z" fill="#fbcfe8"/>
+                    <path d="M70 31 L72 18 L62 25 Z" fill="#fbcfe8"/>
+                    <!-- Chibi Body/Head -->
+                    <path d="M22 46 C22 25 34 20 48 20 C62 20 74 25 74 46 C74 68 66 82 48 82 C30 82 22 68 22 46 Z" fill="url(#mochiBody)" stroke="#7c3aed" stroke-width="2.2"/>
+                    <!-- Forehead stripe -->
+                    <path d="M44 21 L44 27 M48 20 L48 29 M52 21 L52 27" stroke="#c4b5fd" stroke-width="2.4" stroke-linecap="round"/>
+                    <!-- Sparkling Anime Eyes -->
+                    <g class="pet-eye">
+                      <ellipse cx="36" cy="45" rx="4.5" ry="5.5" fill="#1e1b4b"/>
+                      <circle cx="34.5" cy="43" r="1.8" fill="#ffffff"/>
+                      <circle cx="37.5" cy="47" r="0.9" fill="#a78bfa"/>
+                    </g>
+                    <g class="pet-eye">
+                      <ellipse cx="60" cy="45" rx="4.5" ry="5.5" fill="#1e1b4b"/>
+                      <circle cx="58.5" cy="43" r="1.8" fill="#ffffff"/>
+                      <circle cx="61.5" cy="47" r="0.9" fill="#a78bfa"/>
+                    </g>
+                    <!-- Rosy Cheeks -->
+                    <ellipse cx="28" cy="51" rx="4.5" ry="2.5" fill="#fda4af" opacity="0.75"/>
+                    <ellipse cx="68" cy="51" rx="4.5" ry="2.5" fill="#fda4af" opacity="0.75"/>
+                    <!-- Cute Nose & :3 Mouth -->
+                    <polygon points="46,49 50,49 48,51.5" fill="#fb7185"/>
+                    <path d="M42 53 Q45 56 48 53 Q51 56 54 53" fill="none" stroke="#4c1d95" stroke-width="1.9" stroke-linecap="round"/>
+                    <!-- Cute Scarf / Collar -->
+                    <path d="M27 61 Q48 68 69 61 Q67 68 48 70 Q29 68 27 61 Z" fill="url(#mochiScarf)"/>
+                    <circle cx="48" cy="69" r="3.5" fill="#fde047" stroke="#b45309" stroke-width="1.2"/>
+                    <!-- Cute Paws -->
+                    <ellipse cx="35" cy="76" rx="5.5" ry="4" fill="#ffffff" stroke="#7c3aed" stroke-width="1.8"/>
+                    <ellipse cx="61" cy="76" rx="5.5" ry="4" fill="#ffffff" stroke="#7c3aed" stroke-width="1.8"/>
                   </svg>
                 </button>
               </div>
@@ -105,10 +139,9 @@
                   <svg class="ico-xs" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
                   Bản tin
                 </button>
-                <button type="button" class="mini-focus-btn" id="btn-water" title="Chạm để +1 ly nước hôm nay">
+                <button type="button" class="mini-focus-btn" id="btn-water" title="Mở bình nước hôm nay">
                   💧 <span id="water-count">0/8</span>
                 </button>
-                <button type="button" class="mini-focus-btn" id="btn-water-reset" title="Đặt lại nước về 0/8">↻</button>
                 <button type="button" class="mini-focus-btn" id="btn-stretch" title="Bật/Tắt nhắc uống nước & vươn vai mỗi 60 phút">
                   🧘 Nhắc
                 </button>
@@ -400,6 +433,48 @@
         <input type="text" id="ai-chat-input" placeholder="Nói hoặc gõ câu hỏi cho Gemini..." autocomplete="off" />
         <button type="submit" class="btn-primary-sm" id="ai-send-btn">Gửi</button>
       </form>
+    </div>
+  </div>
+
+  <!-- Water Bottle Tracker Pop-up -->
+  <div class="sheet-backdrop hidden" id="water-modal" style="align-items:center;padding:14px;">
+    <div class="popup-card" style="max-width:340px;">
+      <div class="sheet-head">
+        <h3>💧 Theo dõi uống nước</h3>
+        <button class="corner-btn" id="btn-close-water">✕</button>
+      </div>
+      <div class="water-bottle-wrap">
+        <svg class="bottle-svg" viewBox="0 0 100 160">
+          <defs>
+            <clipPath id="bottleClip">
+              <path d="M34 32 L66 32 L76 48 L76 142 Q76 150 68 150 L32 150 Q24 150 24 142 L24 48 Z"/>
+            </clipPath>
+            <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#38bdf8"/>
+              <stop offset="100%" stop-color="#0284c7"/>
+            </linearGradient>
+          </defs>
+          <!-- Bottle Cap -->
+          <rect x="36" y="10" width="28" height="14" rx="4" fill="#7c3aed"/>
+          <rect x="33" y="24" width="34" height="8" rx="3" fill="#a78bfa"/>
+          <!-- Bottle Glass -->
+          <path d="M34 32 L66 32 L76 48 L76 142 Q76 150 68 150 L32 150 Q24 150 24 142 L24 48 Z" fill="#e0f2fe" stroke="#38bdf8" stroke-width="2.5"/>
+          <!-- Water Fill -->
+          <g clip-path="url(#bottleClip)">
+            <rect id="bottle-fill-rect" x="20" y="150" width="60" height="130" fill="url(#waterGrad)" style="transition: y 0.45s cubic-bezier(0.22,1,0.36,1);"/>
+          </g>
+          <!-- Glass Shine -->
+          <path d="M31 54 L31 136" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.55"/>
+        </svg>
+        <div class="water-stats-big">
+          <strong id="water-modal-count">0 / 8 ly</strong>
+          <span id="water-modal-ml">0 / 2,000 ml</span>
+        </div>
+      </div>
+      <div class="row-gap">
+        <button type="button" class="btn-secondary" id="btn-water-reset">↻ Đặt lại 0</button>
+        <button type="button" class="btn-primary" id="btn-water-add" style="flex:1.5;">＋ Uống 1 ly (250ml)</button>
+      </div>
     </div>
   </div>
 
